@@ -2,9 +2,20 @@
   <div class="connect-four">
     <div @click="makeMove(colIndex)" v-for="col, colIndex in game" v-bind:key="colIndex" id="col-0" :class="['column', {'y': !redPlayer}, {'r': redPlayer}]">
       <div v-for="row, rowIndex in col" v-bind:key="rowIndex" class="circle" 
-      :class="{red: game[colIndex][rowIndex] == 1, yellow: game[colIndex][rowIndex] == 2}"/>
+      :class="{red: board[colIndex][rowIndex] == 1, yellow: board[colIndex][rowIndex] == 2}"/>
     </div>
   </div>
+  <button py-click="test_pyscript">TEST</button>
+  <div v-for="col, colIndex in game" v-bind:key="colIndex" type="text">
+    <input :id="getId(colIndex, rowIndex)" v-for="row, rowIndex in game[colIndex]" v-bind:key="rowIndex" v-model="this.game[colIndex][rowIndex]"/>
+  </div>
+  <div id="c0" @click="makeMove(0)"/>
+  <div id="c1" @click="makeMove(1)"/>
+  <div id="c2" @click="makeMove(2)"/>
+  <div id="c3" @click="makeMove(3)"/>
+  <div id="c4" @click="makeMove(4)"/>
+  <div id="c5" @click="makeMove(5)"/>
+  <div id="c6" @click="makeMove(6)"/>
 </template>
 
 <script>
@@ -48,6 +59,12 @@ export default {
       } else if (this.game[colIndex][0] == 0) {
         return 0;
       }
+    },
+    getId(col, row) {
+      return "a" + col + row
+    },
+    test(index) {
+      this.game[index][index] = 1;
     }
   },
   computed: {
@@ -57,6 +74,9 @@ export default {
       } else {
         return 2;
       }
+    },
+    board() {
+      return this.game;
     }
   }
 }

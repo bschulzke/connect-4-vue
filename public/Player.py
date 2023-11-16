@@ -4,6 +4,11 @@
 
 import numpy as np
 import math
+from pyscript import document
+
+def test_pyscript(event):
+    div = document.querySelector("#c0")
+    div.click()
 
 class AIPlayer:
     # NOTE: boardCopy = nnp.copy(board) will create a deep copy
