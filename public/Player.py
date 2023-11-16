@@ -2,7 +2,7 @@
 #  - incorporate MCTS with other code
 #  - pass command line param string to each AI
 # Modified 11.16.2023 by Ben Schulzke to
-# - work with pyscript to integrate with Vue GUI
+# - implement alpha-beta
 
 import numpy as np
 import math
@@ -10,10 +10,19 @@ import random
 from pyscript import document
 
 def ai_move(event):
-    choices = [0,1,2,3,4,5]
-    col = random.choice(choices)
+    board = get_board()
+    agent = AIPlayer(2, "ab", "ab", None)
+    col = agent.get_alpha_beta_move(board)
     div = document.querySelector("#c" + str(col))
     div.click()
+
+def get_board():
+    board = np.zeros([6,7]).astype(int)
+    for r in range(6):
+        for c in range(7):
+            input_tag = document.querySelector("#a" + str(c) + str(r))
+            board[r,c] = input_tag.value
+    return board
 
 class AIPlayer:
     # NOTE: boardCopy = nnp.copy(board) will create a deep copy
