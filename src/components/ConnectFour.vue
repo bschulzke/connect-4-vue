@@ -1,11 +1,11 @@
 <template>
   <div class="connect-four">
-    <div @click="makeMove(colIndex)" v-for="col, colIndex in game" v-bind:key="colIndex" id="col-0" :class="['column', {'y': !redPlayer}, {'r': redPlayer}]">
+    <div @click="playerMove(colIndex)" v-for="col, colIndex in game" v-bind:key="colIndex" id="col-0" :class="['column', {'y': !redPlayer}, {'r': redPlayer}]">
       <div v-for="row, rowIndex in col" v-bind:key="rowIndex" class="circle" 
       :class="{red: board[colIndex][rowIndex] == 1, yellow: board[colIndex][rowIndex] == 2}"/>
     </div>
   </div>
-  <button py-click="test_pyscript">TEST</button>
+  <div ref="agent" py-click="ai_move"/>
   <div v-for="col, colIndex in game" v-bind:key="colIndex" type="text">
     <input :id="getId(colIndex, rowIndex)" v-for="row, rowIndex in game[colIndex]" v-bind:key="rowIndex" v-model="this.game[colIndex][rowIndex]"/>
   </div>
@@ -39,6 +39,10 @@ export default {
     makeMove(colIndex) {
       this.placeTile(colIndex)
       this.redPlayer = !this.redPlayer;
+    },
+    playerMove(colIndex) {
+      this.makeMove(colIndex);
+      this.$refs.agent.click();
     },
     placeTile(colIndex) {
       if (this.game[colIndex][0] == 0) {

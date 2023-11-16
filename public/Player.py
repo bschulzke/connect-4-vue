@@ -6,7 +6,7 @@ import numpy as np
 import math
 from pyscript import document
 
-def test_pyscript(event):
+def ai_move(event):
     div = document.querySelector("#c0")
     div.click()
 
