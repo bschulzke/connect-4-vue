@@ -1,4 +1,4 @@
-# pyscript-vue
+# Connect-4 in Vue
 
 ## Project setup
 ```
