@@ -1,8 +1,8 @@
 <template>
   <div class="connect-four">
-    <div v-for="col, colIndex in game" v-bind:key="colIndex" id="col-0" class="column">
+    <div @click="makeMove(colIndex)" v-for="col, colIndex in game" v-bind:key="colIndex" id="col-0" :class="['column', {'y': !redPlayer}, {'r': redPlayer}]">
       <div v-for="row, rowIndex in col" v-bind:key="rowIndex" class="circle" 
-      :class="{red: game[rowIndex][colIndex] == 1, yellow: game[rowIndex][colIndex] == 2}"/>
+      :class="{red: game[colIndex][rowIndex] == 1, yellow: game[colIndex][rowIndex] == 2}"/>
     </div>
   </div>
 </template>
@@ -18,10 +18,47 @@ export default {
         [0,0,0,0,0,0],
         [0,0,0,0,0,0],
         [0,0,0,0,0,0],
+        [0,0,0,0,0,0],
         [0,0,0,0,0,0]
-      ]
+      ],
+      redPlayer: true
     }
   },
+  methods: {
+    makeMove(colIndex) {
+      this.placeTile(colIndex)
+      this.redPlayer = !this.redPlayer;
+    },
+    placeTile(colIndex) {
+      if (this.game[colIndex][0] == 0) {
+        this.game[colIndex][this.getRowIndex(colIndex)] = this.player
+      }
+    },
+    getRowIndex(colIndex) {
+      if (this.game[colIndex][5] == 0) {
+        return 5;
+      } else if (this.game[colIndex][4] == 0) {
+        return 4;
+      } else if (this.game[colIndex][3] == 0) {
+        return 3;
+      } else if (this.game[colIndex][2] == 0) {
+        return 2;
+      } else if (this.game[colIndex][1] == 0) {
+        return 1;
+      } else if (this.game[colIndex][0] == 0) {
+        return 0;
+      }
+    }
+  },
+  computed: {
+    player() {
+      if (this.redPlayer) {
+        return 1;
+      } else {
+        return 2;
+      }
+    }
+  }
 }
 </script>
 
@@ -36,7 +73,7 @@ export default {
   display: flex;
   flex-direction: column;
   gap: 1px;
-  border: 2px solid white;
+  outline: 2px solid transparent;
   border-radius: 5px;
 }
 .circle {
@@ -51,10 +88,12 @@ export default {
 .yellow {
   background-color: rgb(255, 255, 121);
 }
-.yellow-select {
-  border-color: rgb(255, 255, 121);
+.y:hover {
+  outline-color: rgb(255, 255, 121);
+  cursor: pointer;
 }
-.red-select {
-  border-color: rgb(253, 29, 29);
+.r:hover {
+  outline-color: rgb(253, 29, 29);
+  cursor: pointer;
 }
 </style>
