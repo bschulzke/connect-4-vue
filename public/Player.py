@@ -4,10 +4,13 @@
 
 import numpy as np
 import math
+import random
 from pyscript import document
 
 def ai_move(event):
-    div = document.querySelector("#c0")
+    choices = [0,1,2,3,4,5]
+    col = random.choice(choices)
+    div = document.querySelector("#c" + str(col))
     div.click()
 
 class AIPlayer:
