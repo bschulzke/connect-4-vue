@@ -1,6 +1,8 @@
 #Modified 10.3.2023 by Chris Archibald to
 #  - incorporate MCTS with other code
 #  - pass command line param string to each AI
+# Modified 11.16.2023 by Ben Schulzke to
+# - work with pyscript to integrate with Vue GUI
 
 import numpy as np
 import math
