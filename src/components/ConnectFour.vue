@@ -1,13 +1,13 @@
 <template>
   <div class="connect-four">
-    <div @click="playerMove(colIndex)" v-for="col, colIndex in game" v-bind:key="colIndex" id="col-0" :class="['column', {'y': !redPlayer}, {'r': redPlayer}]">
+    <div @click="playerMove(colIndex)" v-for="col, colIndex in game" v-bind:key="colIndex" id="col-0" :class="['column', {'r': redPlayer}]">
       <div v-for="row, rowIndex in col" v-bind:key="rowIndex" class="circle" 
       :class="{red: board[colIndex][rowIndex] == 1, yellow: board[colIndex][rowIndex] == 2}"/>
     </div>
   </div>
   <div ref="agent" py-click="ai_move"/>
   <div v-for="col, colIndex in game" v-bind:key="colIndex" type="text">
-    <input :id="getId(colIndex, rowIndex)" v-for="row, rowIndex in game[colIndex]" v-bind:key="rowIndex" v-model="this.game[colIndex][rowIndex]"/>
+    <input style="display: none" :id="getId(colIndex, rowIndex)" v-for="row, rowIndex in game[colIndex]" v-bind:key="rowIndex" v-model="this.game[colIndex][rowIndex]"/>
   </div>
   <div id="c0" @click="makeMove(0)"/>
   <div id="c1" @click="makeMove(1)"/>
@@ -41,8 +41,10 @@ export default {
       this.redPlayer = !this.redPlayer;
     },
     playerMove(colIndex) {
-      this.makeMove(colIndex);
-      this.$refs.agent.click();
+      this.makeMove(colIndex)
+      setTimeout(function () {
+        this.$refs.agent.click();
+      }.bind(this),0)
     },
     placeTile(colIndex) {
       if (this.game[colIndex][0] == 0) {
@@ -111,10 +113,6 @@ export default {
 }
 .yellow {
   background-color: rgb(255, 255, 121);
-}
-.y:hover {
-  outline-color: rgb(255, 255, 121);
-  cursor: pointer;
 }
 .r:hover {
   outline-color: rgb(253, 29, 29);
