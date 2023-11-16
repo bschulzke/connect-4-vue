@@ -1,67 +1,27 @@
 <template>
   <div class="connect-four">
-    <div id="col-0" class="column">
-      <div class="circle"/>
-      <div class="circle"/>
-      <div class="circle"/>
-      <div class="circle"/>
-      <div class="circle"/>
-      <div class="circle"/>
-    </div>
-    <div id="col-1" class="column">
-      <div class="circle"/>
-      <div class="circle"/>
-      <div class="circle"/>
-      <div class="circle"/>
-      <div class="circle"/>
-      <div class="circle"/>
-    </div>
-    <div id="col-2" class="column">
-      <div class="circle"/>
-      <div class="circle"/>
-      <div class="circle"/>
-      <div class="circle"/>
-      <div class="circle red"/>
-      <div class="circle yellow"/>
-    </div>
-    <div id="col-3" class="column">
-      <div class="circle"/>
-      <div class="circle"/>
-      <div class="circle"/>
-      <div class="circle"/>
-      <div class="circle"/>
-      <div class="circle"/>
-    </div>
-    <div id="col-4" class="column">
-      <div class="circle"/>
-      <div class="circle"/>
-      <div class="circle"/>
-      <div class="circle"/>
-      <div class="circle"/>
-      <div class="circle"/>
-    </div>
-    <div id="col-5" class="column">
-      <div class="circle"/>
-      <div class="circle"/>
-      <div class="circle"/>
-      <div class="circle"/>
-      <div class="circle"/>
-      <div class="circle"/>
-    </div>
-    <div id="col-6" class="column">
-      <div class="circle"/>
-      <div class="circle"/>
-      <div class="circle"/>
-      <div class="circle"/>
-      <div class="circle"/>
-      <div class="circle"/>
+    <div v-for="col, colIndex in game" v-bind:key="colIndex" id="col-0" class="column">
+      <div v-for="row, rowIndex in col" v-bind:key="rowIndex" class="circle" 
+      :class="{red: game[rowIndex][colIndex] == 1, yellow: game[rowIndex][colIndex] == 2}"/>
     </div>
   </div>
 </template>
 
 <script>
 export default {
-  name: 'Connect Four'
+  name: 'Connect Four',
+  data() {
+    return {
+      game: [
+        [0,0,0,0,0,0],
+        [0,0,0,0,0,0],
+        [0,0,0,0,0,0],
+        [0,0,0,0,0,0],
+        [0,0,0,0,0,0],
+        [0,0,0,0,0,0]
+      ]
+    }
+  },
 }
 </script>
 
@@ -70,6 +30,14 @@ export default {
 .connect-four {
   display: flex;
   justify-content: center;
+  gap: 1px;
+}
+.column {
+  display: flex;
+  flex-direction: column;
+  gap: 1px;
+  border: 2px solid white;
+  border-radius: 5px;
 }
 .circle {
   border: 1px solid grey;
@@ -82,5 +50,11 @@ export default {
 }
 .yellow {
   background-color: rgb(255, 255, 121);
+}
+.yellow-select {
+  border-color: rgb(255, 255, 121);
+}
+.red-select {
+  border-color: rgb(253, 29, 29);
 }
 </style>
