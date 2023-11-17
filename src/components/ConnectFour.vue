@@ -8,9 +8,9 @@
   <div>
 </div>
 <div class="loader-wrapper">
-  <div class="throbber-loader"></div>
+<div class="throbber-loader"></div>
 </div>
-  <div ref="agent" py-click="ai_move"/>
+  <div ref="agent" py-click="from_main"/>
   <div v-for="col, colIndex in game" v-bind:key="colIndex" type="text">
     <input style="display: none" :id="getId(colIndex, rowIndex)" v-for="row, rowIndex in game[colIndex]" v-bind:key="rowIndex" v-model="this.game[colIndex][rowIndex]"/>
   </div>
@@ -23,7 +23,8 @@
   <div id="c6" @click="makeMove(6)"/>
 </template>
 
-<script>
+<script type="pyodide">
+import { toRaw } from "vue";
 export default {
   name: 'Connect Four',
   data() {
@@ -46,10 +47,12 @@ export default {
       this.redPlayer = !this.redPlayer;
     },
     playerMove(colIndex) {
-      this.makeMove(colIndex)
-      setTimeout(function () {
-        this.$refs.agent.click();
-      }.bind(this),0)
+      this.makeMove(colIndex);
+      this.startWorker();
+    },
+    startWorker() {
+      // TODO: Finish
+      this.$refs.agent.click();
     },
     placeTile(colIndex) {
       if (this.game[colIndex][0] == 0) {

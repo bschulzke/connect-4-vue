@@ -9,6 +9,7 @@ import math
 import random
 from pyscript import document
 
+
 def ai_move(event):
     board = get_board()
     agent = AIPlayer(2, "ab", "ab", None)
@@ -212,77 +213,6 @@ class AIPlayer:
         secondaryThreats = count_secondary_threats(board, self.player_number, self.other_player_number)
 
         return primaryThreats + secondaryThreats
-
-class RandomPlayer:
-    def __init__(self, player_number):
-        self.player_number = player_number
-        self.type = 'random'
-        self.name = 'random'
-        self.player_string = 'Player {}: random'.format(player_number)
-
-    def get_move(self, board):
-        """
-        Given the current board state select a random column from the available
-        valid moves.
-
-        INPUTS:
-        board - a numpy array containing the state of the board using the
-                following encoding:
-                - the board maintains its same two dimensions
-                    - row 0 is the top of the board and so is
-                      the last row filled
-                - spaces that are unoccupied are marked as 0
-                - spaces that are occupied by player 1 have a 1 in them
-                - spaces that are occupied by player 2 have a 2 in them
-
-        RETURNS:
-        The 0 based index of the column that represents the next move
-        """
-        valid_cols = []
-        for col in range(board.shape[1]):
-            if 0 in board[:,col]:
-                valid_cols.append(col)
-
-        return np.random.choice(valid_cols)
-
-class HumanPlayer:
-    def __init__(self, player_number):
-        self.player_number = player_number
-        self.type = 'human'
-        self.name = 'human'
-        self.player_string = 'Player {}: human'.format(player_number)
-
-    def get_move(self, board):
-        """
-        Given the current board state returns the human input for next move
-
-        INPUTS:
-        board - a numpy array containing the state of the board using the
-                following encoding:
-                - the board maintains its same two dimensions
-                    - row 0 is the top of the board and so is
-                      the last row filled
-                - spaces that are unoccupied are marked as 0
-                - spaces that are occupied by player 1 have a 1 in them
-                - spaces that are occupied by player 2 have a 2 in them
-
-        RETURNS:
-        The 0 based index of the column that represents the next move
-        """
-
-        valid_cols = []
-        for i, col in enumerate(board.T):
-            if 0 in col:
-                valid_cols.append(i)
-        
-        move = int(input('Enter your move, Human: '))
-
-        while move not in valid_cols:
-            print('Column full, choose from:{}'.format(valid_cols))
-            move = int(input('Enter your move: '))
-
-        return move
-
 
 #CODE FOR MCTS 
 class MCTSNode:
