@@ -2,7 +2,7 @@
   <button class="button" role="button" @click="resetGame">Restart</button>
   <div style="height: 2rem;">{{ victoryText }}</div>
   <div class="connect-four">
-    <div @click="makeMove(colIndex)" v-for="col, colIndex in game" v-bind:key="colIndex" id="col-0" :class="['column', {'y': player == 2}, {'r': player == 1}]">
+    <div @click="makeMove(colIndex)" v-for="col, colIndex in game" v-bind:key="colIndex" id="col-0" :class="['column', {'y': player == 2 && isValidMove(colIndex)}, {'r': player == 1 && isValidMove(colIndex)}]">
       <div v-for="row, rowIndex in col" v-bind:key="rowIndex" class="circle" 
       :class="{red: game[colIndex][rowIndex] == 1, yellow: game[colIndex][rowIndex] == 2}"/>
     </div>
@@ -28,7 +28,7 @@ export default {
   },
   methods: {
     makeMove(colIndex) {
-      if (!this.gameOver) {
+      if (!this.gameOver && this.isValidMove(colIndex)) {
         this.placeTile(colIndex)
         this.redPlayer = !this.redPlayer;
       }
@@ -47,10 +47,13 @@ export default {
     },
     placeTile(colIndex) {
       if (this.game[colIndex][0] == 0) {
-        this.game[colIndex][this.getRowIndex(colIndex)] = this.player
+        this.game[colIndex][this.getRowForMove(colIndex)] = this.player
       }
     },
-    getRowIndex(colIndex) {
+    isValidMove(colIndex) {
+      return this.game[colIndex].includes(0)
+    },
+    getRowForMove(colIndex) {
       if (this.game[colIndex][5] == 0) {
         return 5;
       } else if (this.game[colIndex][4] == 0) {
