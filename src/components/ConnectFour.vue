@@ -20,7 +20,7 @@
   <div style="height: 2rem; padding-top: 0.5rem;">{{ victoryText }}</div>
   <div class="connect-four">
     <div 
-    @click="makeMove(colIndex)" 
+    @click="playerMove(colIndex)" 
     v-for="col, colIndex in game" v-bind:key="colIndex" id="col-0" 
     :class="['column', 
     {'y': validateYellow && isValidMove(colIndex)}, 
@@ -32,6 +32,7 @@
 </template>
 
 <script>
+const worker = new Worker("agent.js");
 import { toRaw } from "vue";
 export default {
   name: 'Connect Four',
@@ -65,9 +66,15 @@ export default {
         }
       }
     },
+    playerMove(colIndex) {
+      if (this.boardUnlocked) {
+        this.makeMove(colIndex)
+      }
+    },
     resetGame() {
       this.redPlayer = true;
       this.mostRecent[0,1] = -1;
+      worker.terminate();
       this.game = [
         [0,0,0,0,0,0],
         [0,0,0,0,0,0],
@@ -96,7 +103,6 @@ export default {
     },
     agentMove() {
       console.log("Starting up the worker...")
-      const worker = new Worker("agent.js");
       let validMoves = this.getValidMoves();
       worker.postMessage([validMoves, toRaw(this.game)])
       this.isLoading = true;
@@ -248,6 +254,16 @@ export default {
         return "Start";
       } else {
         return "Restart";
+      }
+    },
+    boardUnlocked() {
+      return !this.isLoading && this.humanTurn
+    },
+    humanTurn() {
+      if (this.redPlayer) {
+        return this.playerOneOption == "Human";
+      } else {
+        return this.playerTwoOption == "Human"
       }
     }
   }
