@@ -6,7 +6,7 @@
     <option>AI Depth 2</option>
     <option>AI Depth 3</option>
     </select>
-    <button :disabled="buttonDisabled" class="button" role="button" @click="resetGame">{{buttonText}}</button>
+    <button :disabled="buttonDisabled" class="button" role="button" @click="startOrRestart">{{buttonText}}</button>
     <select :disabled="gameStarted" v-model="playerTwoOption">
       <option>Human</option>
       <option>AI Depth 1</option>
@@ -14,7 +14,7 @@
       <option>AI Depth 3</option>
     </select>
   </div>
-  <div style="height: 2rem;">{{ victoryText }}</div>
+  <div style="height: 2rem; padding-top: 0.5rem;">{{ victoryText }}</div>
   <div class="connect-four">
     <div 
     @click="makeMove(colIndex)" 
@@ -53,6 +53,11 @@ export default {
       if (!this.gameOver && this.isValidMove(colIndex)) {
         this.placeTile(colIndex)
         this.redPlayer = !this.redPlayer;
+        if (this.redPlayer && this.playerOneOption != "Human" && !this.gameOver) {
+          this.agentMove();
+        } else if (!this.redPlayer && this.playerTwoOption != "Human" && !this.gameOver) {
+          this.agentMove();
+        }
       }
     },
     resetGame() {
@@ -67,6 +72,35 @@ export default {
         [0,0,0,0,0,0],
         [0,0,0,0,0,0]
       ]
+    },
+    startOrRestart() {
+      if (this.playerOneOption == "Human" || this.gameStarted) {
+        this.resetGame();
+      } else {
+        this.playerOneMove();
+      }
+    },
+    getValidMoves() {
+      const validMoves = [];
+      for (let c = 0; c < 7; c++) {
+          if (this.board.some(row => row[c] === 0)) {
+              validMoves.push(c);
+          }
+      }
+      return validMoves;
+    },
+    agentMove() {
+      let moves = this.getValidMoves();
+      let move = moves[Math.floor(Math.random() * moves.length)]
+      this.makeMove(move);
+    },
+    playerOneMove() {
+      console.log("Agent is thinking...");
+      this.agentMove();
+    },
+    playerTwoMove() {
+      console.log("Agent is thinking...");
+      this.agentMove();
     },
     placeTile(colIndex) {
       if (this.game[colIndex][0] == 0) {
