@@ -10,7 +10,7 @@
 <div class="loader-wrapper">
 <div class="throbber-loader"></div>
 </div>
-  <div ref="agent" py-click="from_main"/>
+  <div ref="agent" py-click="spawn_worker"/>
   <div v-for="col, colIndex in game" v-bind:key="colIndex" type="text">
     <input style="display: none" :id="getId(colIndex, rowIndex)" v-for="row, rowIndex in game[colIndex]" v-bind:key="rowIndex" v-model="this.game[colIndex][rowIndex]"/>
   </div>
