@@ -1,5 +1,6 @@
 <template>
-  <div :style="['height: 2rem;', { color: winningColor}]">{{ victoryText }}</div>
+  <button class="button" role="button" @click="resetGame">Restart</button>
+  <div style="height: 2rem;">{{ victoryText }}</div>
   <div class="connect-four">
     <div @click="makeMove(colIndex)" v-for="col, colIndex in game" v-bind:key="colIndex" id="col-0" :class="['column', {'y': player == 2}, {'r': player == 1}]">
       <div v-for="row, rowIndex in col" v-bind:key="rowIndex" class="circle" 
@@ -31,6 +32,18 @@ export default {
         this.placeTile(colIndex)
         this.redPlayer = !this.redPlayer;
       }
+    },
+    resetGame() {
+      this.redPlayer = true;
+      this.game = [
+        [0,0,0,0,0,0],
+        [0,0,0,0,0,0],
+        [0,0,0,0,0,0],
+        [0,0,0,0,0,0],
+        [0,0,0,0,0,0],
+        [0,0,0,0,0,0],
+        [0,0,0,0,0,0]
+      ]
     },
     placeTile(colIndex) {
       if (this.game[colIndex][0] == 0) {
@@ -138,7 +151,7 @@ export default {
     },
     winningColor() {
       if (this.redWon) {
-        return 'rgb(253, 29, 29)';
+        return 'rgb(250, 86, 86);';
       } else {
         return 'rgb(255, 255, 121)';
       }
@@ -152,7 +165,9 @@ export default {
 .connect-four {
   display: flex;
   justify-content: center;
+  align-items: center;
   gap: 1px;
+  width: 100%;
 }
 .column {
   display: flex;
@@ -168,7 +183,7 @@ export default {
   border-radius: 100%;
 }
 .red {
-  background-color: rgb(253, 29, 29);
+  background-color: rgb(250, 86, 86);
 }
 .yellow {
   background-color: rgb(255, 255, 121);
@@ -178,7 +193,37 @@ export default {
   cursor: pointer;
 }
 .r:hover {
-  outline-color: rgb(253, 29, 29);
+  outline-color: rgb(250, 86, 86);
   cursor: pointer;
 }
+
+/* CSS */
+.button {
+  background: #5df0ba;
+  border-radius: 999px;
+  box-shadow: #4ab78f 0 10px 20px -10px;
+  box-sizing: border-box;
+  color: #FFFFFF;
+  cursor: pointer;
+  font-family: Inter,Helvetica,"Apple Color Emoji","Segoe UI Emoji",NotoColorEmoji,"Noto Color Emoji","Segoe UI Symbol","Android Emoji",EmojiSymbols,-apple-system,system-ui,"Segoe UI",Roboto,"Helvetica Neue","Noto Sans",sans-serif;
+  font-size: 16px;
+  font-weight: 700;
+  line-height: 24px;
+  opacity: 1;
+  outline: 0 solid transparent;
+  padding: 8px 18px;
+  user-select: none;
+  -webkit-user-select: none;
+  touch-action: manipulation;
+  width: fit-content;
+  word-break: break-word;
+  border: 0;
+  max-height: 3rem;
+}
+
+.button:hover {
+  background: #50cc9f;
+  box-shadow: #3b9373 0 10px 20px -10px;
+}
+
 </style>
