@@ -1,8 +1,27 @@
 <template>
-  <button class="button" role="button" @click="resetGame">Restart</button>
+  <div class="options">
+    <select :disabled="gameStarted" v-model="playerOneOption">
+    <option>Human</option>
+    <option>AI Depth 1</option>
+    <option>AI Depth 2</option>
+    <option>AI Depth 3</option>
+    </select>
+    <button :disabled="buttonDisabled" class="button" role="button" @click="resetGame">{{buttonText}}</button>
+    <select :disabled="gameStarted" v-model="playerTwoOption">
+      <option>Human</option>
+      <option>AI Depth 1</option>
+      <option>AI Depth 2</option>
+      <option>AI Depth 3</option>
+    </select>
+  </div>
   <div style="height: 2rem;">{{ victoryText }}</div>
   <div class="connect-four">
-    <div @click="makeMove(colIndex)" v-for="col, colIndex in game" v-bind:key="colIndex" id="col-0" :class="['column', {'y': player == 2 && isValidMove(colIndex)}, {'r': player == 1 && isValidMove(colIndex)}]">
+    <div 
+    @click="makeMove(colIndex)" 
+    v-for="col, colIndex in game" v-bind:key="colIndex" id="col-0" 
+    :class="['column', 
+    {'y': validateYellow && isValidMove(colIndex)}, 
+    {'r': validateRed && isValidMove(colIndex)}]">
       <div v-for="row, rowIndex in col" v-bind:key="rowIndex" 
       :class="[{red: game[colIndex][rowIndex] == 1, yellow: game[colIndex][rowIndex] == 2, 'most-recent': mostRecent[0] == colIndex && mostRecent[1] == rowIndex}, 'circle']"/>
     </div>
@@ -24,7 +43,9 @@ export default {
         [0,0,0,0,0,0]
       ],
       redPlayer: true,
-      mostRecent: [-1,-1]
+      mostRecent: [-1,-1],
+      playerOneOption: "Human",
+      playerTwoOption: "AI Depth 3"
     }
   },
   methods: {
@@ -143,6 +164,14 @@ export default {
         return "";
       }
     },
+    gameStarted() {
+      for (let row of this.game) {
+        if (row.includes(1) || row.includes(2)) {
+          return true;
+        }
+      }
+      return false;
+    },
     tied() {
       for (let row of this.game) {
         if (row.includes(0)) {
@@ -163,6 +192,25 @@ export default {
       } else {
         return 'rgb(255, 255, 121)';
       }
+    },
+    validateYellow() {
+      return this.player == 2 && this.playerTwoOption == "Human";
+    },
+    validateRed() {
+      return this.player == 1 && this.playerOneOption == "Human";
+    },
+    buttonDisabled() {
+      return !this.gameStarted && !this.aiStarts;
+    },
+    aiStarts() {
+      return this.playerOneOption != "Human";
+    },
+    buttonText() {
+      if (this.aiStarts && !this.gameStarted) {
+        return "Start";
+      } else {
+        return "Restart";
+      }
     }
   }
 }
@@ -176,6 +224,12 @@ export default {
   align-items: center;
   gap: 3px;
   width: 100%;
+}
+.options {
+  display: flex;
+  width: 100%;
+  justify-content: center;
+  gap: 15vw;
 }
 .column {
   display: flex;
@@ -217,16 +271,16 @@ export default {
   color: #FFFFFF;
   cursor: pointer;
   font-family: Inter,Helvetica,"Apple Color Emoji","Segoe UI Emoji",NotoColorEmoji,"Noto Color Emoji","Segoe UI Symbol","Android Emoji",EmojiSymbols,-apple-system,system-ui,"Segoe UI",Roboto,"Helvetica Neue","Noto Sans",sans-serif;
-  font-size: 16px;
+  font-size: 1rem;
   font-weight: 700;
-  line-height: 24px;
+  line-height: 2rem;
   opacity: 1;
   outline: 0 solid transparent;
-  padding: 8px 18px;
+  padding: 0.5rem;
   user-select: none;
   -webkit-user-select: none;
   touch-action: manipulation;
-  width: fit-content;
+  width: 6rem;
   word-break: break-word;
   border: 0;
   max-height: 3rem;
@@ -235,6 +289,11 @@ export default {
 .button:hover {
   background: #50cc9f;
   box-shadow: #3b9373 0 10px 20px -10px;
+}
+
+.button:disabled {
+  background: rgb(157, 157, 157);
+  box-shadow: rgb(78, 77, 77) 0 10px 20px -10px;
 }
 
 </style>
