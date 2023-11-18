@@ -3,8 +3,8 @@
   <div style="height: 2rem;">{{ victoryText }}</div>
   <div class="connect-four">
     <div @click="makeMove(colIndex)" v-for="col, colIndex in game" v-bind:key="colIndex" id="col-0" :class="['column', {'y': player == 2 && isValidMove(colIndex)}, {'r': player == 1 && isValidMove(colIndex)}]">
-      <div v-for="row, rowIndex in col" v-bind:key="rowIndex" class="circle" 
-      :class="{red: game[colIndex][rowIndex] == 1, yellow: game[colIndex][rowIndex] == 2}"/>
+      <div v-for="row, rowIndex in col" v-bind:key="rowIndex" 
+      :class="[{red: game[colIndex][rowIndex] == 1, yellow: game[colIndex][rowIndex] == 2, 'most-recent': mostRecent[0] == colIndex && mostRecent[1] == rowIndex}, 'circle']"/>
     </div>
   </div>
 </template>
@@ -23,7 +23,8 @@ export default {
         [0,0,0,0,0,0],
         [0,0,0,0,0,0]
       ],
-      redPlayer: true
+      redPlayer: true,
+      mostRecent: [-1,-1]
     }
   },
   methods: {
@@ -35,6 +36,7 @@ export default {
     },
     resetGame() {
       this.redPlayer = true;
+      this.mostRecent[0,1] = -1;
       this.game = [
         [0,0,0,0,0,0],
         [0,0,0,0,0,0],
@@ -47,7 +49,10 @@ export default {
     },
     placeTile(colIndex) {
       if (this.game[colIndex][0] == 0) {
-        this.game[colIndex][this.getRowForMove(colIndex)] = this.player
+        let rowIndex = this.getRowForMove(colIndex);
+        this.mostRecent[0] = colIndex;
+        this.mostRecent[1] = rowIndex;
+        this.game[colIndex][rowIndex] = this.player
       }
     },
     isValidMove(colIndex) {
@@ -169,7 +174,7 @@ export default {
   display: flex;
   justify-content: center;
   align-items: center;
-  gap: 1px;
+  gap: 3px;
   width: 100%;
 }
 .column {
@@ -180,10 +185,13 @@ export default {
   border-radius: 5px;
 }
 .circle {
-  border: 1px solid grey;
+  border: 2px solid rgb(157, 157, 157);
   height: 14vh;
   width: 14vh;
   border-radius: 100%;
+}
+.most-recent {
+  border-color: #5df0ba;
 }
 .red {
   background-color: rgb(250, 86, 86);
