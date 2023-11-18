@@ -1,7 +1,7 @@
 <template>
-  <div style="height: 2rem;">{{ victoryText }}</div>
+  <div :style="['height: 2rem;', { color: winningColor}]">{{ victoryText }}</div>
   <div class="connect-four">
-    <div @click="makeMove(colIndex)" v-for="col, colIndex in game" v-bind:key="colIndex" id="col-0" :class="['column', {'y': !redPlayer}, {'r': redPlayer}]">
+    <div @click="makeMove(colIndex)" v-for="col, colIndex in game" v-bind:key="colIndex" id="col-0" :class="['column', {'y': player == 2}, {'r': player == 1}]">
       <div v-for="row, rowIndex in col" v-bind:key="rowIndex" class="circle" 
       :class="{red: game[colIndex][rowIndex] == 1, yellow: game[colIndex][rowIndex] == 2}"/>
     </div>
@@ -27,8 +27,10 @@ export default {
   },
   methods: {
     makeMove(colIndex) {
-      this.placeTile(colIndex)
-      this.redPlayer = !this.redPlayer;
+      if (!this.gameOver) {
+        this.placeTile(colIndex)
+        this.redPlayer = !this.redPlayer;
+      }
     },
     placeTile(colIndex) {
       if (this.game[colIndex][0] == 0) {
@@ -93,10 +95,14 @@ export default {
   },                    
   computed: {
     player() {
-      if (this.redPlayer) {
+      if (!this.gameOver) {
+        if (this.redPlayer) {
         return 1;
+        } else {
+          return 2;
+        }
       } else {
-        return 2;
+        return 0;
       }
     },
     redWon() {
@@ -130,14 +136,11 @@ export default {
     board() {
       return JSON.parse(JSON.stringify(this.game));
     },
-    currentPlayer() {
-      if (this.gameOver()) {
-        return 0;
-      }
-      if (this.redPlayer) {
-        return 1;
+    winningColor() {
+      if (this.redWon) {
+        return 'rgb(253, 29, 29)';
       } else {
-        return 2;
+        return 'rgb(255, 255, 121)';
       }
     }
   }
