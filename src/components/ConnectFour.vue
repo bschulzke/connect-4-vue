@@ -1,4 +1,5 @@
 <template>
+  <div style="height: 2rem;">{{ victoryText }}</div>
   <div class="connect-four">
     <div @click="makeMove(colIndex)" v-for="col, colIndex in game" v-bind:key="colIndex" id="col-0" :class="['column', {'y': !redPlayer}, {'r': redPlayer}]">
       <div v-for="row, rowIndex in col" v-bind:key="rowIndex" class="circle" 
@@ -48,8 +49,48 @@ export default {
       } else if (this.game[colIndex][0] == 0) {
         return 0;
       }
+    },
+    isWinningState(playerNum) {
+    const playerWinStr = `${playerNum}${playerNum}${playerNum}${playerNum}`;
+
+    function checkHorizontal(b) {
+        for (let row of b) {
+            if (row.join('').includes(playerWinStr)) {
+                return true;
+            }
+        }
+        return false;
     }
-  },
+
+    function checkVertical(b) {
+        return checkHorizontal(b[0].map((_, i) => b.map(row => row[i])));
+    }
+
+    function checkDiagonal(b) {
+      for (let op of [null, (board) => [...board].map(row => row.reverse())]) {
+          let opBoard = op ? op([...b]) : [...b];
+
+          let rootDiag = opBoard.map((row, i) => row[i]).map(Number);
+          if (rootDiag.join('').includes(playerWinStr)) {
+              return true;
+          }
+
+          for (let i = 1; i <= b[0].length - 3; i++) {
+              for (let offset of [i, -i]) {
+                  let diag = opBoard.map((row, j) => row[j + offset]).map(Number);
+                  if (diag.join('').includes(playerWinStr)) {
+                      return true;
+                  }
+              }
+          }
+      }
+
+      return false;
+    }
+
+    return checkHorizontal(this.board) || checkVertical(this.board) || checkDiagonal(this.board);
+    },
+  },                    
   computed: {
     player() {
       if (this.redPlayer) {
@@ -57,6 +98,24 @@ export default {
       } else {
         return 2;
       }
+    },
+    redWon() {
+      return this.isWinningState(1);
+    },
+    yellowWon() {
+      return this.isWinningState(2);
+    },
+    victoryText() {
+      if (this.redWon) {
+        return "Red wins!";
+      } else if (this.yellowWon) {
+        return "Yellow wins!";
+      } else {
+        return "";
+      }
+    },
+    board() {
+      return JSON.parse(JSON.stringify(this.game));
     }
   }
 }
