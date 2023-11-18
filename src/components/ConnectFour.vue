@@ -54,7 +54,7 @@ export default {
     const playerWinStr = `${playerNum}${playerNum}${playerNum}${playerNum}`;
 
     function checkHorizontal(b) {
-        for (let row of b) {
+        for (const row of b) {
             if (row.join('').includes(playerWinStr)) {
                 return true;
             }
@@ -110,12 +110,35 @@ export default {
         return "Red wins!";
       } else if (this.yellowWon) {
         return "Yellow wins!";
+      } else if (this.tied) {
+        return "Cat's game!";
       } else {
         return "";
       }
     },
+    tied() {
+      for (let row of this.game) {
+        if (row.includes(0)) {
+          return false;
+        }
+      }
+      return true;
+    },
+    gameOver() {
+      return this.redWon || this.yellowWon || this.tied
+    },
     board() {
       return JSON.parse(JSON.stringify(this.game));
+    },
+    currentPlayer() {
+      if (this.gameOver()) {
+        return 0;
+      }
+      if (this.redPlayer) {
+        return 1;
+      } else {
+        return 2;
+      }
     }
   }
 }
