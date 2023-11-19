@@ -28,7 +28,7 @@
 </template>
 
 <script>
-const worker = new Worker("agent.js");
+let worker = new Worker("agent.js");
 import { toRaw } from "vue";
 export default {
   name: 'Connect Four',
@@ -67,6 +67,7 @@ export default {
     restartWorker() {
       worker.terminate();
       worker = new Worker("agent.js");
+      this.loading = false;
     },
     playerMove(colIndex) {
       if (this.boardUnlocked) {
