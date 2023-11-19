@@ -3,5 +3,5 @@ module.exports = defineConfig({
   transpileDependencies: true
 })
 module.exports = {
-  publicPath: '/connect-4-vue/'
+  publicPath: process.env.NODE_ENV === "production" ? "/REPO_NAME/" : "/",
 }

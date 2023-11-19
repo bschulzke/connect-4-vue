@@ -61,8 +61,12 @@ export default {
           this.agentMove();
         }
       } else {
-        worker.terminate();
+        this.restartWorker();
       }
+    },
+    restartWorker() {
+      worker.terminate();
+      worker = new Worker("agent.js");
     },
     playerMove(colIndex) {
       if (this.boardUnlocked) {
@@ -72,7 +76,7 @@ export default {
     resetGame() {
       this.redPlayer = true;
       this.mostRecent[0,1] = -1;
-      worker.terminate();
+      this.restartWorker();
       this.game = [
         [0,0,0,0,0,0],
         [0,0,0,0,0,0],
