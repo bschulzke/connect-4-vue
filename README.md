@@ -15,5 +15,10 @@ npm run serve
 npm run build
 ```
 
-### Customize configuration
-See [Configuration Reference](https://cli.vuejs.org/config/).
+### Deploy code to GitHub Pages site
+```
+npm run build
+```
+```
+git subtree push --prefix dist origin gh-pages
+```
