@@ -313,6 +313,13 @@ export default {
   width: 12vh;
   border-radius: 100%;
 }
+@media only screen 
+and (max-width : 1200px) {
+  .circle {
+    height: 12vw;
+    width: 12vw;
+  }
+}
 .most-recent {
   border-color: #5df0ba;
 }
