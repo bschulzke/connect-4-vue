@@ -319,6 +319,12 @@ and (max-width : 1200px) {
     height: 12vw;
     width: 12vw;
   }
+  .y:hover {
+    outline-color: transparent;
+  }
+  .r:hover {
+    outline-color: transparent;
+  }
 }
 .most-recent {
   border-color: #5df0ba;
