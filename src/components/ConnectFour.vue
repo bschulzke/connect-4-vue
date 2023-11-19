@@ -314,10 +314,24 @@ export default {
   border-radius: 100%;
 }
 @media only screen 
-and (max-width : 1200px) {
+and (max-width : 900px) {
   .circle {
     height: 12vw;
     width: 12vw;
+  }
+  .y:hover {
+    outline-color: transparent;
+  }
+  .r:hover {
+    outline-color: transparent;
+  }
+}
+@media only screen 
+and (min-width: 901px)
+and (max-width : 1200px) {
+  .circle {
+    height: 10vw;
+    width: 10vw;
   }
   .y:hover {
     outline-color: transparent;
