@@ -2,16 +2,12 @@
   <div class="options">
     <select :disabled="gameStarted" v-model="playerOneOption">
     <option>Human</option>
-    <option>AI Depth 1</option>
-    <option>AI Depth 2</option>
-    <option>AI Depth 3</option>
+    <option>AI</option>
     </select>
     <button :disabled="buttonDisabled" class="button" role="button" @click="startOrRestart">{{buttonText}}</button>
     <select :disabled="gameStarted" v-model="playerTwoOption">
       <option>Human</option>
-      <option>AI Depth 1</option>
-      <option>AI Depth 2</option>
-      <option>AI Depth 3</option>
+      <option>AI</option>
     </select>
   </div>
   <div class="loader-wrapper">
@@ -50,20 +46,22 @@ export default {
       redPlayer: true,
       mostRecent: [-1,-1],
       playerOneOption: "Human",
-      playerTwoOption: "AI Depth 3",
+      playerTwoOption: "AI",
       isLoading: false
     }
   },
   methods: {
     makeMove(colIndex) {
       if (!this.gameOver && this.isValidMove(colIndex)) {
-        this.placeTile(colIndex)
+        this.placeTile(colIndex);
         this.redPlayer = !this.redPlayer;
         if (this.redPlayer && this.playerOneOption != "Human" && !this.gameOver) {
           this.agentMove();
         } else if (!this.redPlayer && this.playerTwoOption != "Human" && !this.gameOver) {
           this.agentMove();
         }
+      } else {
+        worker.terminate();
       }
     },
     playerMove(colIndex) {
@@ -102,9 +100,10 @@ export default {
       return validMoves;
     },
     agentMove() {
-      console.log("Starting up the worker...")
       let validMoves = this.getValidMoves();
-      worker.postMessage([validMoves, toRaw(this.game)])
+      let message = [validMoves, toRaw(this.game), this.player, this.otherPlayer, 4];
+      console.log("Starting up the worker...")
+      worker.postMessage(message);
       this.isLoading = true;
       worker.onmessage = (e) => {
         console.log("Agent worker chose move: " + e.data);
@@ -186,6 +185,17 @@ export default {
         return 1;
         } else {
           return 2;
+        }
+      } else {
+        return 0;
+      }
+    },
+    otherPlayer() {
+      if (!this.gameOver) {
+        if (this.redPlayer) {
+        return 2;
+        } else {
+          return 1;
         }
       } else {
         return 0;
