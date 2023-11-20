@@ -1,7 +1,7 @@
 <template>
   <div class="options">
     <div class="player-selection">
-      <select :disabled="gameStarted" v-model="playerOneOption">
+      <select :disabled="gameStarted && !gameOver" v-model="playerOneOption">
       <option>Human</option>
       <option>AI</option>
     </select>
@@ -12,7 +12,7 @@
     </div>
     <button :disabled="buttonDisabled" class="button" role="button" @click="startOrRestart">{{buttonText}}</button>
     <div class="player-selection">
-      <select :disabled="gameStarted" v-model="playerTwoOption">
+      <select :disabled="gameStarted  && !gameOver" v-model="playerTwoOption">
         <option>Human</option>
         <option>AI</option>
       </select>
