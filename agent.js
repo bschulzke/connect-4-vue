@@ -12,7 +12,6 @@ async function chooseMove(e) {
     let move = agent.getAlphaBetaMove(board);
     console.log("Posting message back to main thread");
     postMessage(move);
-
 }
 
 function sleep(ms) {
@@ -27,6 +26,22 @@ class AlphaBetaPlayer {
     }
 
     getAlphaBetaMove(board) {
+
+        console.log("Base Depth: " + this.depthLimit);
+
+        let possibleDepths = [];
+
+        possibleDepths.push(Number(this.depthLimit));
+        if (this.depthLimit < 5) {
+            possibleDepths.push(Number(this.depthLimit) + 1);
+        }
+        if (this.depthLimit > 1) {
+            possibleDepths.push(Number(this.depthLimit) - 1);
+        }
+
+        this.depthLimit = possibleDepths[Math.floor(Math.random() * possibleDepths.length)];
+        
+        console.log("Actual depth: " + this.depthLimit);
 
         // YOUR ALPHA-BETA CODE GOES HERE
         let alpha = Number.NEGATIVE_INFINITY;
