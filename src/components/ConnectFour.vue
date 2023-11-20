@@ -6,8 +6,8 @@
       <option>AI</option>
     </select>
     <div v-if="playerOneOption == 'AI'" class="slider-wrapper">
-      <input type="range" id="al" name="a1" min="0" max="5">    
-      <label disabled="true" for="a1">Level</label>
+      <input v-model="playerOneLevel" type="range" id="al" name="a1" min="1" max="5">    
+      <label disabled="true" for="a1">Difficulty</label>
     </div>
     </div>
     <button :disabled="buttonDisabled" class="button" role="button" @click="startOrRestart">{{buttonText}}</button>
@@ -17,8 +17,8 @@
         <option>AI</option>
       </select>
       <div v-if="playerTwoOption == 'AI'" class="slider-wrapper">
-        <input type="range" id="al" name="a1" min="0" max="5">    
-        <label disabled="true" for="a1">Level</label>
+        <input v-model="playerTwoLevel" type="range" id="al" name="a1" min="1" max="5">    
+        <label disabled="true" for="a1">Difficulty</label>
       </div>
     </div>
   </div>
@@ -59,7 +59,9 @@ export default {
       mostRecent: [-1,-1],
       playerOneOption: "Human",
       playerTwoOption: "AI",
-      isLoading: false
+      isLoading: false,
+      playerOneLevel: 3,
+      playerTwoLevel: 3
     }
   },
   methods: {
@@ -118,7 +120,7 @@ export default {
     },
     agentMove() {
       let validMoves = this.getValidMoves();
-      let message = [validMoves, toRaw(this.game), this.player, this.otherPlayer, 4];
+      let message = [validMoves, toRaw(this.game), this.player, this.otherPlayer, this.playerDepth];
       console.log("Starting up the worker...")
       worker.postMessage(message);
       this.isLoading = true;
@@ -216,6 +218,13 @@ export default {
         }
       } else {
         return 0;
+      }
+    },
+    playerDepth() {
+      if (this.redPlayer) {
+        return this.playerOneLevel;
+      } else {
+        return this.playerTwoLevel;
       }
     },
     redWon() {
