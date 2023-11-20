@@ -1,5 +1,6 @@
 <template>
-  <div class="options">
+  <div :style="{ '--red': red, '--yellow': yellow, '--border': border,'--green': green, '--green-hover': greenHover, '--white': white }">
+    <div class="options">
     <div class="player-selection">
       <div class="dropdown-wrapper">
         <div class="red-circle tile"/>
@@ -40,8 +41,13 @@
     {'y': validateYellow && isValidMove(colIndex)}, 
     {'r': validateRed && isValidMove(colIndex)}]">
       <div v-for="row, rowIndex in col" v-bind:key="rowIndex" 
-      :class="[{red: game[colIndex][rowIndex] == 1, yellow: game[colIndex][rowIndex] == 2, 'most-recent': mostRecent[0] == colIndex && mostRecent[1] == rowIndex}, 'circle']"/>
+      :class="[
+        {red: game[colIndex][rowIndex] == 1, yellow: game[colIndex][rowIndex] == 2, 
+          'most-recent': mostRecent[0] == colIndex && mostRecent[1] == rowIndex},
+         'circle'
+         ]"/>
     </div>
+  </div>
   </div>
 </template>
 
@@ -67,7 +73,13 @@ export default {
       playerTwoOption: "AI",
       isLoading: false,
       playerOneLevel: 3,
-      playerTwoLevel: 3
+      playerTwoLevel: 3,
+      red: 'rgb(250, 86, 86)',
+      yellow: 'rgb(255, 255, 121)',
+      border: 'rgb(157, 157, 157)',
+      green: '#5df0ba',
+      greenHover: '#50cc9f',
+      white: '#FFFFFF'
     }
   },
   methods: {
@@ -272,13 +284,6 @@ export default {
     board() {
       return JSON.parse(JSON.stringify(this.game));
     },
-    winningColor() {
-      if (this.redWon) {
-        return 'rgb(250, 86, 86);';
-      } else {
-        return 'rgb(255, 255, 121)';
-      }
-    },
     validateYellow() {
       return this.player == 2 && this.playerTwoOption == "Human";
     },
@@ -316,7 +321,7 @@ export default {
 <style scoped>
 label {
   font-size: 0.8rem;
-  color: rgb(157, 157, 157);
+  color: var(--border);
 }
 .connect-four {
   display: flex;
@@ -357,35 +362,35 @@ label {
   border-radius: 5px;
 }
 .circle {
-  border: 2px solid rgb(157, 157, 157);
+  border: 2px solid var(--border);
   height: 12vh;
   width: 12vh;
   border-radius: 100%;
 }
 .most-recent {
-  border-color: #5df0ba;
+  border-color: var(--green);
 }
 .red {
-  background-color: rgb(250, 86, 86);
+  background-color: var(--red);
 }
 .yellow {
-  background-color: rgb(255, 255, 121);
+  background-color: var(--yellow);
 }
 .y:hover {
-  outline-color: rgb(255, 255, 121);
+  outline-color: var(--yellow);
   cursor: pointer;
 }
 .r:hover {
-  outline-color: rgb(250, 86, 86);
+  outline-color: var(--red);
   cursor: pointer;
 }
 
 /* CSS */
 .button {
-  background: #5df0ba;
+  background: var(--green);
   border-radius: 999px;
   box-sizing: border-box;
-  color: #FFFFFF;
+  color: var(--white);
   cursor: pointer;
   font-family: Inter,Helvetica,"Apple Color Emoji","Segoe UI Emoji",NotoColorEmoji,"Noto Color Emoji","Segoe UI Symbol","Android Emoji",EmojiSymbols,-apple-system,system-ui,"Segoe UI",Roboto,"Helvetica Neue","Noto Sans",sans-serif;
   font-size: 1rem;
@@ -404,11 +409,11 @@ label {
 }
 
 .button:hover {
-  background: #50cc9f;
+  background: var(--green-hover);
 }
 
 .button:disabled {
-  background: rgb(157, 157, 157);
+  background: var(--border);
 }
 
 .loader-wrapper {
@@ -420,15 +425,15 @@ label {
   width: 1rem;
   height: 1rem;
   border-radius: 100%;
-  border: 1px solid rgb(157, 157, 157);
+  border: 1px solid var(--border);
 }
 
 .red-circle {
-  background-color: rgb(250, 86, 86);
+  background-color: var(--red);
 }
 
 .yellow-circle {
-  background-color: rgb(255, 255, 121);
+  background-color: var(--yellow);
 }
 
 /* Copyright (c) 2013 John W. Long and Julia Elman
