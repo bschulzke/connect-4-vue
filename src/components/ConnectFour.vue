@@ -312,9 +312,6 @@ label {
   font-size: 0.8rem;
   color: rgb(157, 157, 157);
 }
-select {
-  width: 8.5rem;
-}
 .connect-four {
   display: flex;
   justify-content: center;
@@ -326,12 +323,13 @@ select {
   display: flex;
   width: 100%;
   justify-content: center;
-  gap: 12vw;
+  gap: 14vw;
 }
 
 .player-selection {
   display: flex;
   flex-direction: column;
+  width: 5rem;
 }
 
 .slider-wrapper {
@@ -352,6 +350,12 @@ select {
   height: 12vh;
   width: 12vh;
   border-radius: 100%;
+}
+@media only screen 
+and (max-width : 400px) {
+  .options {
+    gap: 10vw;
+  }
 }
 @media only screen 
 and (max-width : 900px) {
@@ -402,7 +406,6 @@ and (max-width : 1100px) {
 .button {
   background: #5df0ba;
   border-radius: 999px;
-  box-shadow: #4ab78f 0 10px 20px -10px;
   box-sizing: border-box;
   color: #FFFFFF;
   cursor: pointer;
@@ -416,7 +419,7 @@ and (max-width : 1100px) {
   user-select: none;
   -webkit-user-select: none;
   touch-action: manipulation;
-  width: 6rem;
+  min-width: 6rem;
   word-break: break-word;
   border: 0;
   max-height: 3rem;
@@ -424,12 +427,10 @@ and (max-width : 1100px) {
 
 .button:hover {
   background: #50cc9f;
-  box-shadow: #3b9373 0 10px 20px -10px;
 }
 
 .button:disabled {
   background: rgb(157, 157, 157);
-  box-shadow: rgb(78, 77, 77) 0 10px 20px -10px;
 }
 
 .loader-wrapper {
