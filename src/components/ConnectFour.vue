@@ -351,39 +351,6 @@ label {
   width: 12vh;
   border-radius: 100%;
 }
-@media only screen 
-and (max-width : 400px) {
-  .options {
-    gap: 10vw;
-  }
-}
-@media only screen 
-and (max-width : 900px) {
-  .circle {
-    height: 12vw;
-    width: 12vw;
-  }
-  .y:hover {
-    outline-color: transparent;
-  }
-  .r:hover {
-    outline-color: transparent;
-  }
-}
-@media only screen 
-and (min-width: 901px)
-and (max-width : 1100px) {
-  .circle {
-    height: 10vw;
-    width: 10vw;
-  }
-  .y:hover {
-    outline-color: transparent;
-  }
-  .r:hover {
-    outline-color: transparent;
-  }
-}
 .most-recent {
   border-color: #5df0ba;
 }
@@ -523,6 +490,41 @@ WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE. */
   -webkit-animation: throbber-loader 2000ms 450ms infinite ease-out;
   animation: throbber-loader 2000ms 450ms infinite ease-out;
   right: -1.6em;
+}
+
+@media only screen 
+and (max-width : 1200px) {
+  .circle {
+    height: 12vw;
+    width: 12vw;
+  }
+  .y:hover {
+    outline-color: transparent;
+  }
+  .r:hover {
+    outline-color: transparent;
+  }
+}
+
+@media only screen 
+and (max-width : 400px) {
+  .options {
+    gap: 10vw;
+  }
+}
+@media only screen 
+and (min-width: 901px)
+and (max-width : 1100px) {
+  .circle {
+    height: 10vw;
+    width: 10vw;
+  }
+  .y:hover {
+    outline-color: transparent;
+  }
+  .r:hover {
+    outline-color: transparent;
+  }
 }
 
 </style>
