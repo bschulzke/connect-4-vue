@@ -1,14 +1,26 @@
 <template>
   <div class="options">
-    <select :disabled="gameStarted" v-model="playerOneOption">
-    <option>Human</option>
-    <option>AI</option>
-    </select>
-    <button :disabled="buttonDisabled" class="button" role="button" @click="startOrRestart">{{buttonText}}</button>
-    <select :disabled="gameStarted" v-model="playerTwoOption">
+    <div class="player-selection">
+      <select :disabled="gameStarted" v-model="playerOneOption">
       <option>Human</option>
       <option>AI</option>
     </select>
+    <div v-if="playerOneOption == 'AI'" class="slider-wrapper">
+      <input type="range" id="al" name="a1" min="0" max="5">    
+      <label disabled="true" for="a1">Level</label>
+    </div>
+    </div>
+    <button :disabled="buttonDisabled" class="button" role="button" @click="startOrRestart">{{buttonText}}</button>
+    <div class="player-selection">
+      <select :disabled="gameStarted" v-model="playerTwoOption">
+        <option>Human</option>
+        <option>AI</option>
+      </select>
+      <div v-if="playerTwoOption == 'AI'" class="slider-wrapper">
+        <input type="range" id="al" name="a1" min="0" max="5">    
+        <label disabled="true" for="a1">Level</label>
+      </div>
+    </div>
   </div>
   <div class="loader-wrapper">
     <div v-if="isLoading" class="throbber-loader"></div>
@@ -287,6 +299,13 @@ export default {
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped>
+label {
+  font-size: 0.8rem;
+  color: rgb(157, 157, 157);
+}
+select {
+  width: 8.5rem;
+}
 .connect-four {
   display: flex;
   justify-content: center;
@@ -298,8 +317,20 @@ export default {
   display: flex;
   width: 100%;
   justify-content: center;
-  gap: 15vw;
+  gap: 12vw;
 }
+
+.player-selection {
+  display: flex;
+  flex-direction: column;
+}
+
+.slider-wrapper {
+  display: flex;
+  flex-direction: column;
+  height: 1rem;
+}
+
 .column {
   display: flex;
   flex-direction: column;
@@ -328,7 +359,7 @@ and (max-width : 900px) {
 }
 @media only screen 
 and (min-width: 901px)
-and (max-width : 1200px) {
+and (max-width : 1100px) {
   .circle {
     height: 10vw;
     width: 10vw;
