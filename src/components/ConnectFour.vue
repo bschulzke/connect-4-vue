@@ -1,10 +1,13 @@
 <template>
   <div class="options">
     <div class="player-selection">
-      <select :disabled="gameStarted && !gameOver" v-model="playerOneOption">
-      <option>Human</option>
-      <option>AI</option>
-    </select>
+      <div class="dropdown-wrapper">
+        <div class="red-circle tile"/>
+        <select :disabled="gameStarted && !gameOver" v-model="playerOneOption">
+          <option>Human</option>
+          <option>AI</option>
+        </select>
+      </div>
     <div v-if="playerOneOption == 'AI'" class="slider-wrapper">
       <input v-model="playerOneLevel" type="range" id="al" name="a1" min="1" max="5">    
       <label disabled="true" for="a1">Difficulty</label>
@@ -12,10 +15,13 @@
     </div>
     <button :disabled="buttonDisabled" class="button" role="button" @click="startOrRestart">{{buttonText}}</button>
     <div class="player-selection">
-      <select :disabled="gameStarted  && !gameOver" v-model="playerTwoOption">
-        <option>Human</option>
-        <option>AI</option>
-      </select>
+      <div class="dropdown-wrapper">
+        <div class="yellow-circle tile"/>
+        <select :disabled="gameStarted  && !gameOver" v-model="playerTwoOption">
+          <option>Human</option>
+          <option>AI</option>
+        </select>
+      </div>
       <div v-if="playerTwoOption == 'AI'" class="slider-wrapper">
         <input v-model="playerTwoLevel" type="range" id="al" name="a1" min="1" max="5">    
         <label disabled="true" for="a1">Difficulty</label>
@@ -323,13 +329,18 @@ label {
   display: flex;
   width: 100%;
   justify-content: center;
-  gap: 14vw;
+  gap: 13.5vw;
 }
 
 .player-selection {
   display: flex;
   flex-direction: column;
-  width: 5rem;
+  width: 6rem;
+}
+
+.dropdown-wrapper {
+  display: flex;
+  gap: 0.5rem;
 }
 
 .slider-wrapper {
@@ -404,6 +415,22 @@ label {
   height: 1rem;
   margin-top: 1rem;
 }
+
+.tile {
+  width: 1rem;
+  height: 1rem;
+  border-radius: 100%;
+  border: 1px solid rgb(157, 157, 157);
+}
+
+.red-circle {
+  background-color: rgb(250, 86, 86);
+}
+
+.yellow-circle {
+  background-color: rgb(255, 255, 121);
+}
+
 /* Copyright (c) 2013 John W. Long and Julia Elman
 
 Permission is hereby granted, free of charge, to any person obtaining
@@ -525,6 +552,13 @@ and (max-width : 1100px) {
   .r:hover {
     outline-color: transparent;
   }
+}
+
+@media only screen
+and (max-width: 375px) {
+  .options {
+  gap: 8vw;
+}
 }
 
 </style>
