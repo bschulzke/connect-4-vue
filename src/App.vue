@@ -22,4 +22,12 @@ export default {
   color: #2c3e50;
   padding-top: 0.5rem;
 }
+
+@media (prefers-color-scheme: dark) { 
+  body {
+    color: white; 
+    background: rgb(19, 19, 19) 
+  }
+}
+
 </style>

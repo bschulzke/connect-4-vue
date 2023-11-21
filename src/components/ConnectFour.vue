@@ -1,5 +1,23 @@
 <template>
-  <div :style="{ '--red': red, '--yellow': yellow, '--border': border,'--green': green, '--green-hover': greenHover, '--white': white }">
+  <div :style="{ 
+    '--red': red, 
+    '--yellow': yellow, 
+    '--border': border,
+    '--green': green, 
+    '--green-hover': greenHover, 
+    '--white': white,
+    '--overlay': overlay,
+    '--grey': grey,
+    '--text-color': textColor 
+    }">
+    <div @click="playerOneColorPicker = false; playerTwoColorPicker = false;" v-if="playerOneColorPicker || playerTwoColorPicker" class="overlay">
+      <div class="color-picker" v-if="playerOneColorPicker">
+
+      </div>
+      <div class="color-picker" v-if="playerTwoColorPicker">
+
+      </div>
+    </div>
     <div class="options">
     <div class="player-selection">
       <div class="dropdown-wrapper">
@@ -32,7 +50,7 @@
   <div class="loader-wrapper">
     <div v-if="isLoading" class="throbber-loader"></div>
   </div>
-  <div style="height: 2rem; padding-top: 0.5rem;">{{ victoryText }}</div>
+  <div class="victory-text">{{ victoryText }}</div>
   <div class="connect-four">
     <div 
     @click="playerMove(colIndex)" 
@@ -74,12 +92,12 @@ export default {
       isLoading: false,
       playerOneLevel: 3,
       playerTwoLevel: 3,
-      red: 'rgb(250, 86, 86)',
-      yellow: 'rgb(255, 255, 121)',
-      border: 'rgb(157, 157, 157)',
-      green: '#5df0ba',
+      playerOneColorPicker: false,
+      playerTwoColorPicker: false,
       greenHover: '#50cc9f',
-      white: '#FFFFFF'
+      white: '#FFFFFF',
+      overlay: 'rgba(0, 0, 0, 0.5)',
+      grey: 'rgb(157, 157, 157)'
     }
   },
   methods: {
@@ -312,6 +330,39 @@ export default {
       } else {
         return this.playerTwoOption == "Human"
       }
+    },
+    red() {
+     if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) {
+        return 'rgb(255, 49, 49)';
+      } else {
+        return 'rgb(250, 86, 86)';
+      }
+    },
+    yellow() {
+      if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) {
+        return 'rgb(199, 255, 79)';
+      }
+      return 'rgb(255, 255, 121)';
+    },
+    green() {
+      if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) {
+        return 'rgb(56, 167, 126)';
+      }
+      return '#5df0ba';
+    },
+    border() {
+      if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) {
+        return '#FFFFFF';
+      } else {
+        return 'rgb(157, 157, 157)';
+      }
+    },
+    textColor() {
+      if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) {
+        return '#FFFFFF';
+      } else {
+        return 'black';
+      }
     }
   }
 }
@@ -319,9 +370,28 @@ export default {
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped>
+
+.overlay {
+  position: absolute;
+  left: 0;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  background-color: var(--overlay);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.color-picker {
+  height: 12rem;
+  width: 24rem;
+  background-color: var(--white);
+}
+
 label {
   font-size: 0.8rem;
-  color: var(--border);
+  color: var(--grey);
 }
 .connect-four {
   display: flex;
@@ -335,6 +405,12 @@ label {
   width: 100%;
   justify-content: center;
   gap: 13.5vw;
+}
+
+.victory-text {
+  height: 2rem; 
+  padding-top: 0.5rem;
+  color: var(--text-color);
 }
 
 .player-selection {
@@ -413,7 +489,7 @@ label {
 }
 
 .button:disabled {
-  background: var(--border);
+  background: var(--grey);
 }
 
 .loader-wrapper {
