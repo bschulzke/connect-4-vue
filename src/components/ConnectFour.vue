@@ -11,13 +11,25 @@
     '--text-color': textColor 
     }">
     <div @click="playerOneColorPicker = false; playerTwoColorPicker = false;" v-if="playerOneColorPicker || playerTwoColorPicker" class="overlay">
-      <div class="color-picker" v-if="playerOneColorPicker">
+      <div @click.prevent.stop class="color-picker" v-if="playerOneColorPicker">
         <font-awesome-icon @click="playerOneColorPicker = false" icon="fa-solid fa-x"/>
-        <div v-for="color in p1ColorOptions" v-bind:key="color" :class="['big-tile', {'green-border': color == playerOneColor}]" :style="{ 'background-color': color }"/>
+        <div 
+        v-for="color in p1ColorOptions" 
+        v-bind:key="color" 
+        :class="['big-tile', {'green-border': color == playerOneColor}]" 
+        :style="{ 'background-color': color }"
+        @click="playerOneColor = color"
+        />
       </div>
-      <div class="color-picker" v-if="playerTwoColorPicker">
-        <font-awesome-icon @click="playerOneColorPicker = false" icon="fa-solid fa-x" />
-        <div v-for="color in p2ColorOptions" v-bind:key="color" :class="['big-tile', {'green-border': color == playerTwoColor}]" :style="{ 'background-color': color }"/>
+      <div @click.prevent.stop class="color-picker" v-if="playerTwoColorPicker">
+        <font-awesome-icon @click="playerTwoColorPicker = false" icon="fa-solid fa-x" />
+        <div 
+        v-for="color in p2ColorOptions" 
+        v-bind:key="color" 
+        :class="['big-tile', {'green-border': color == playerTwoColor}]" 
+        :style="{ 'background-color': color }"
+        @click="playerTwoColor = color"
+        />
       </div>
     </div>
     <div class="options">
@@ -106,9 +118,9 @@ export default {
       white: '#FFFFFF',
       overlay: 'rgba(0, 0, 0, 0.5)',
       grey: 'rgb(157, 157, 157)',
-      playerOneColor: 'rgb(250, 86, 86)',
+      playerOneColor: 'rgb(255, 45, 45)',
       playerTwoColor: 'rgb(255, 255, 121)',
-      colorOptions: ['rgb(250, 86, 86)', 'rgb(255, 255, 121)', '#E6E6FA', ]
+      colorOptions: ['rgb(255, 45, 45)', 'rgb(255, 255, 121)', '#E6E6FA', '#f88379', '#9FE2BF', '#89cff0']
     }
   },
   methods: {
@@ -282,9 +294,9 @@ export default {
     },
     victoryText() {
       if (this.redWon) {
-        return "Red wins!";
+        return "Player One wins!";
       } else if (this.yellowWon) {
-        return "Yellow wins!";
+        return "Player Two wins!";
       } else if (this.tied) {
         return "Cat's game!";
       } else {
@@ -380,6 +392,12 @@ export default {
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped>
 
+/*
+  greyscale filters:
+  -moz-filter: grayscale(90%);
+  -webkit-filter: grayscale(90%);
+  filter: grayscale(90%); */
+
 .overlay {
   position: absolute;
   left: 0;
@@ -402,6 +420,7 @@ export default {
   justify-content: center;
   align-items: center;
   gap: 1rem;
+  color: rgb(255, 45, 45);
 }
 
 .fa-x {
@@ -411,6 +430,10 @@ export default {
   right: 0;
   padding-right: 1rem;
   padding-top: 1rem;
+}
+
+.fa-x:hover {
+  cursor: pointer;
 }
 
 label {
@@ -530,6 +553,11 @@ label {
   height: 3rem;
   border-radius: 100%;
   border: 2px solid var(--border);
+}
+
+.big-tile:hover {
+  cursor: pointer;
+  border-color: var(--green);
 }
 
 .small-tile:hover {
