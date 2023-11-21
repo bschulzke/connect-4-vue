@@ -22,13 +22,13 @@
     <div class="player-selection">
       <div class="dropdown-wrapper">
         <div class="red-circle tile"/>
-        <select :disabled="gameStarted && !gameOver" v-model="playerOneOption">
+        <select :disabled="optionsDisabled" v-model="playerOneOption">
           <option>Human</option>
           <option>AI</option>
         </select>
       </div>
     <div v-if="playerOneOption == 'AI'" class="slider-wrapper">
-      <input v-model="playerOneLevel" type="range" id="al" name="a1" min="1" max="5">    
+      <input :disabled="optionsDisabled" v-model="playerOneLevel" type="range" id="al" name="a1" min="1" max="5">    
       <label disabled="true" for="a1">Difficulty</label>
     </div>
     </div>
@@ -36,13 +36,13 @@
     <div class="player-selection">
       <div class="dropdown-wrapper">
         <div class="yellow-circle tile"/>
-        <select :disabled="gameStarted  && !gameOver" v-model="playerTwoOption">
+        <select :disabled="optionsDisabled" v-model="playerTwoOption">
           <option>Human</option>
           <option>AI</option>
         </select>
       </div>
       <div v-if="playerTwoOption == 'AI'" class="slider-wrapper">
-        <input v-model="playerTwoLevel" type="range" id="al" name="a1" min="1" max="5">    
+        <input :disabled="optionsDisabled" v-model="playerTwoLevel" type="range" id="al" name="a1" min="1" max="5">    
         <label disabled="true" for="a1">Difficulty</label>
       </div>
     </div>
@@ -330,6 +330,9 @@ export default {
       } else {
         return this.playerTwoOption == "Human"
       }
+    },
+    optionsDisabled() {
+      return this.gameStarted && !this.gameOver
     },
     red() {
      if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) {
