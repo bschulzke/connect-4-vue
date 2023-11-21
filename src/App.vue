@@ -5,10 +5,21 @@
 <script>
 import ConnectFour from './components/ConnectFour.vue'
 
+import { library } from '@fortawesome/fontawesome-svg-core'
+
+import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome'
+
+import { faX } from '@fortawesome/free-solid-svg-icons'
+import {faUserSecret} from '@fortawesome/free-solid-svg-icons'
+
+library.add(faX);
+library.add(faUserSecret);
+
 export default {
   name: 'App',
   components: {
-    ConnectFour
+    ConnectFour,
+    FontAwesomeIcon
   }
 }
 </script>

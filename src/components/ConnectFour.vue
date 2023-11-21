@@ -1,7 +1,7 @@
 <template>
   <div :style="{ 
-    '--red': red, 
-    '--yellow': yellow, 
+    '--p1': playerOneColor, 
+    '--yellow': playerTwoColor, 
     '--border': border,
     '--green': green, 
     '--green-hover': greenHover, 
@@ -12,16 +12,18 @@
     }">
     <div @click="playerOneColorPicker = false; playerTwoColorPicker = false;" v-if="playerOneColorPicker || playerTwoColorPicker" class="overlay">
       <div class="color-picker" v-if="playerOneColorPicker">
-
+        <font-awesome-icon @click="playerOneColorPicker = false" icon="fa-solid fa-x"/>
+        <div v-for="color in p1ColorOptions" v-bind:key="color" :class="['big-tile', {'green-border': color == playerOneColor}]" :style="{ 'background-color': color }"/>
       </div>
       <div class="color-picker" v-if="playerTwoColorPicker">
-
+        <font-awesome-icon @click="playerOneColorPicker = false" icon="fa-solid fa-x" />
+        <div v-for="color in p2ColorOptions" v-bind:key="color" :class="['big-tile', {'green-border': color == playerTwoColor}]" :style="{ 'background-color': color }"/>
       </div>
     </div>
     <div class="options">
     <div class="player-selection">
       <div class="dropdown-wrapper">
-        <div class="red-circle tile"/>
+        <div @click="playerOneColorPicker = true" class="red-circle small-tile"/>
         <select :disabled="optionsDisabled" v-model="playerOneOption">
           <option>Human</option>
           <option>AI</option>
@@ -35,7 +37,7 @@
     <button :disabled="buttonDisabled" class="button" role="button" @click="startOrRestart">{{buttonText}}</button>
     <div class="player-selection">
       <div class="dropdown-wrapper">
-        <div class="yellow-circle tile"/>
+        <div @click="playerTwoColorPicker = true" class="yellow-circle small-tile"/>
         <select :disabled="optionsDisabled" v-model="playerTwoOption">
           <option>Human</option>
           <option>AI</option>
@@ -61,7 +63,7 @@
       <div v-for="row, rowIndex in col" v-bind:key="rowIndex" 
       :class="[
         {red: game[colIndex][rowIndex] == 1, yellow: game[colIndex][rowIndex] == 2, 
-          'most-recent': mostRecent[0] == colIndex && mostRecent[1] == rowIndex},
+          'green-border': mostRecent[0] == colIndex && mostRecent[1] == rowIndex},
          'circle'
          ]"/>
     </div>
@@ -70,10 +72,16 @@
 </template>
 
 <script>
+
+import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome'
+
 let worker = new Worker("agent.js");
 import { toRaw } from "vue";
 export default {
   name: 'Connect Four',
+  components: {
+    FontAwesomeIcon
+  },
   data() {
     return {
       game: [
@@ -97,7 +105,10 @@ export default {
       greenHover: '#50cc9f',
       white: '#FFFFFF',
       overlay: 'rgba(0, 0, 0, 0.5)',
-      grey: 'rgb(157, 157, 157)'
+      grey: 'rgb(157, 157, 157)',
+      playerOneColor: 'rgb(250, 86, 86)',
+      playerTwoColor: 'rgb(255, 255, 121)',
+      colorOptions: ['rgb(250, 86, 86)', 'rgb(255, 255, 121)', '#E6E6FA', ]
     }
   },
   methods: {
@@ -334,19 +345,6 @@ export default {
     optionsDisabled() {
       return this.gameStarted && !this.gameOver
     },
-    red() {
-     if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) {
-        return 'rgb(255, 49, 49)';
-      } else {
-        return 'rgb(250, 86, 86)';
-      }
-    },
-    yellow() {
-      if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) {
-        return 'rgb(199, 255, 79)';
-      }
-      return 'rgb(255, 255, 121)';
-    },
     green() {
       if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) {
         return 'rgb(56, 167, 126)';
@@ -366,6 +364,14 @@ export default {
       } else {
         return 'black';
       }
+    },
+    p1ColorOptions() {
+      let options = JSON.parse(JSON.stringify(this.colorOptions));
+      return options.filter(color => color !== this.playerTwoColor);
+    },
+    p2ColorOptions() {
+      let options = JSON.parse(JSON.stringify(this.colorOptions));
+      return options.filter(color => color !== this.playerOneColor);
     }
   }
 }
@@ -390,6 +396,21 @@ export default {
   height: 12rem;
   width: 24rem;
   background-color: var(--white);
+  border-radius: 1rem;
+  position: relative;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 1rem;
+}
+
+.fa-x {
+  color: var(--grey);
+  position: absolute;
+  top: 0;
+  right: 0;
+  padding-right: 1rem;
+  padding-top: 1rem;
 }
 
 label {
@@ -446,11 +467,8 @@ label {
   width: 12vh;
   border-radius: 100%;
 }
-.most-recent {
-  border-color: var(--green);
-}
 .red {
-  background-color: var(--red);
+  background-color: var(--p1);
 }
 .yellow {
   background-color: var(--yellow);
@@ -460,7 +478,7 @@ label {
   cursor: pointer;
 }
 .r:hover {
-  outline-color: var(--red);
+  outline-color: var(--p1);
   cursor: pointer;
 }
 
@@ -500,15 +518,26 @@ label {
   margin-top: 1rem;
 }
 
-.tile {
+.small-tile {
   width: 1rem;
   height: 1rem;
   border-radius: 100%;
   border: 1px solid var(--border);
 }
 
+.big-tile {
+  width: 3rem;
+  height: 3rem;
+  border-radius: 100%;
+  border: 2px solid var(--border);
+}
+
+.small-tile:hover {
+  cursor: pointer;
+}
+
 .red-circle {
-  background-color: var(--red);
+  background-color: var(--p1);
 }
 
 .yellow-circle {
@@ -603,6 +632,10 @@ WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE. */
   right: -1.6em;
 }
 
+.green-border {
+  border-color: var(--green);
+}
+
 @media only screen 
 and (max-width : 1200px) {
   .circle {
@@ -621,6 +654,9 @@ and (max-width : 1200px) {
 and (max-width : 400px) {
   .options {
     gap: 10vw;
+  }
+  .color-picker {
+    width: 22rem;
   }
 }
 @media only screen 
