@@ -307,13 +307,13 @@ export default {
     },
     otherPlayerDepth() {
       if (this.redPlayer) {
-        return this.playerTwoLevel;
+        return Number(this.playerTwoLevel);
       } else {
-        return this.playerOneLevel;
+        return Number(this.playerOneLevel);
       }
     },
     hintDepth() {
-      let depth = this.otherPlayerDepth;
+      let depth = Number(this.otherPlayerDepth);
       if (depth < 1) {
         depth = 1;
       }
