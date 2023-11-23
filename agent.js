@@ -8,15 +8,11 @@ async function chooseMove(e) {
     let playerNumber = e.data[2];
     let otherPlayerNumber = e.data[3];
     let depthLimit = e.data[4];
-    await new Promise(r => setTimeout(r, 700));
+    await new Promise(r => setTimeout(r, 500));
     let agent = new AlphaBetaPlayer(playerNumber, otherPlayerNumber, depthLimit);
     let move = agent.getAlphaBetaMove(board);
     console.log("Posting message back to main thread");
     postMessage(move);
-}
-
-function sleep(ms) {
-    return new Promise(resolve => setTimeout(resolve, ms));
 }
 
 class AlphaBetaPlayer {
