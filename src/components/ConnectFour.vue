@@ -82,7 +82,7 @@
          ]"/>
     </div>
   </div>
-  <button v-if="!buttonDisabled" :disabled="!humanTurn" class="button hint-button" role="button" @click="getHint">Hint</button>
+  <!-- <button v-if="!buttonDisabled" :disabled="!humanTurn" class="button hint-button" role="button" @click="getHint">Hint</button> -->
   </div>
 </template>
 
