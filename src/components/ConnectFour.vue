@@ -71,7 +71,9 @@
     v-for="col, colIndex in game" v-bind:key="colIndex" id="col-0" 
     :class="['column', 
     {'y': validateYellow && isValidMove(colIndex)}, 
-    {'r': validateRed && isValidMove(colIndex)}]">
+    {'r': validateRed && isValidMove(colIndex)},
+    {'hint': hint == colIndex}
+    ]">
       <div v-for="row, rowIndex in col" v-bind:key="rowIndex" 
       :class="[
         {red: game[colIndex][rowIndex] == 1, yellow: game[colIndex][rowIndex] == 2, 
@@ -80,6 +82,7 @@
          ]"/>
     </div>
   </div>
+  <button v-if="!buttonDisabled" :disabled="!humanTurn" class="button hint-button" role="button" @click="getHint">Hint</button>
   </div>
 </template>
 
@@ -120,7 +123,8 @@ export default {
       grey: 'rgb(157, 157, 157)',
       playerOneColor: 'rgb(255, 45, 45)',
       playerTwoColor: 'rgb(255, 255, 121)',
-      colorOptions: ['rgb(255, 45, 45)', 'rgb(255, 255, 121)', '#E6E6FA', '#f88379', '#9FE2BF', '#89cff0']
+      colorOptions: ['rgb(255, 45, 45)', 'rgb(255, 255, 121)', '#E6E6FA', '#f88379', '#9FE2BF', '#89cff0'],
+      hint: null
     }
   },
   methods: {
@@ -136,6 +140,7 @@ export default {
       } else {
         this.restartWorker();
       }
+      this.hint = null;
     },
     restartWorker() {
       worker.terminate();
@@ -145,6 +150,19 @@ export default {
     playerMove(colIndex) {
       if (this.boardUnlocked) {
         this.makeMove(colIndex)
+      }
+    },
+    getHint() {
+      let validMoves = this.getValidMoves();
+      console.log("Hint depth: " + this.hintDepth);
+      let message = [validMoves, toRaw(this.game), this.player, this.otherPlayer, this.hintDepth];
+      console.log("Starting up the worker to get a hint...")
+      worker.postMessage(message);
+      this.isLoading = true;
+      worker.onmessage = (e) => {
+        console.log("Hint is column: " + e.data);
+        this.hint = e.data;
+        this.isLoading = false;
       }
     },
     resetGame() {
@@ -167,6 +185,7 @@ export default {
       } else {
         this.agentMove();
       }
+      this.hint = null;
     },
     getValidMoves() {
       const validMoves = [];
@@ -285,6 +304,23 @@ export default {
       } else {
         return this.playerTwoLevel;
       }
+    },
+    otherPlayerDepth() {
+      if (this.redPlayer) {
+        return this.playerTwoLevel;
+      } else {
+        return this.playerOneLevel;
+      }
+    },
+    hintDepth() {
+      let depth = this.otherPlayerDepth;
+      if (depth < 1) {
+        depth = 1;
+      }
+      if (depth < 4) {
+        depth = depth + 2;
+      }
+      return depth;
     },
     redWon() {
       return this.isWinningState(1);
@@ -505,6 +541,10 @@ label {
   cursor: pointer;
 }
 
+.hint {
+  outline-color: var(--green);
+}
+
 /* CSS */
 .button {
   background: var(--green);
@@ -526,6 +566,10 @@ label {
   word-break: break-word;
   border: 0;
   max-height: 3rem;
+}
+
+.hint-button {
+  margin-top: 1rem;
 }
 
 .button:hover {
