@@ -20,7 +20,7 @@ class AlphaBetaPlayer {
         this.playerNumber = playerNumber;
         this.otherPlayerNumber = otherPlayerNumber;
         if (depthLimit < 1) {
-            this.probBadMove = 9 + Number(depthLimit);
+            this.probBadMove = 5 + Number(depthLimit);
             this.depthLimit = 1;
         } else {
             this.depthLimit = depthLimit;
@@ -62,24 +62,9 @@ class AlphaBetaPlayer {
             if (this.probBadMove) {
                 console.log("Probability of a bad move: " + this.probBadMove);
                 let random = Math.floor(Math.random() * 10);
-                if (Number(bestMove[1]) > -1000 && Number(utility) <= -1000) {
-                    bestMove = [move, utility];
-                    alpha = utility;
-                    break;
-                }
                 if ((random > this.probBadMove)) {
-                    if (utility < bestMove[1]) {
-                        bestMove = [move, utility];
-                        alpha = utility;
-                    }
-        
-                    if (utility === bestMove[1] && Math.abs(move - 3) > Math.abs(bestMove[0] - 3)) {
-                        bestMove = [move, utility];
-                        alpha = utility;
-                    }
                     console.log("Taking worse move");
-                } else {
-                    console.log("Taking better move");
+                    continue;
                 }
             }
 

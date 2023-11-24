@@ -42,7 +42,7 @@
         </select>
       </div>
     <div v-if="playerOneOption == 'AI'" class="slider-wrapper">
-      <input :disabled="optionsDisabled" v-model="playerOneLevel" type="range" id="al" name="a1" min="-2" max="5">    
+      <input :disabled="optionsDisabled" v-model="playerOneLevel" type="range" id="al" name="a1" min="0" max="5">    
       <label disabled="true" for="a1">Difficulty</label>
     </div>
     </div>
@@ -56,7 +56,7 @@
         </select>
       </div>
       <div v-if="playerTwoOption == 'AI'" class="slider-wrapper">
-        <input :disabled="optionsDisabled" v-model="playerTwoLevel" type="range" id="al" name="a1" min="-2" max="5">    
+        <input :disabled="optionsDisabled" v-model="playerTwoLevel" type="range" id="al" name="a1" min="0" max="5">    
         <label disabled="true" for="a1">Difficulty</label>
       </div>
     </div>
