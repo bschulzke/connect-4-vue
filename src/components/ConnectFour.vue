@@ -9,7 +9,9 @@
     '--overlay': overlay,
     '--grey': grey,
     '--text-color': textColor 
-    }">
+  }">
+  <font-awesome-icon :disabled="!humanTurn" role="button" @click="getHint" icon="fa-solid fa-lightbulb" />
+  <a href="https://github.com/bschulzke/connect-4-vue" target="_blank"><font-awesome-icon icon="fa-brands fa-github" /></a>
     <div @click="playerOneColorPicker = false; playerTwoColorPicker = false;" v-if="playerOneColorPicker || playerTwoColorPicker" class="overlay">
       <div @click.prevent.stop class="color-picker" v-if="playerOneColorPicker">
         <font-awesome-icon @click="playerOneColorPicker = false" icon="fa-solid fa-x"/>
@@ -82,7 +84,6 @@
          ]"/>
     </div>
   </div>
-  <!-- <button v-if="!buttonDisabled" :disabled="!humanTurn" class="button hint-button" role="button" @click="getHint">Hint</button> -->
   </div>
 </template>
 
@@ -317,7 +318,7 @@ export default {
       if (depth < 1) {
         depth = 1;
       }
-      if (depth < 4) {
+      if (depth < 5) {
         depth = depth + 2;
       }
       return depth;
@@ -384,6 +385,9 @@ export default {
       return !this.isLoading && this.humanTurn
     },
     humanTurn() {
+      if (!this.gameStarted) {
+        return true;
+      }
       if (this.redPlayer) {
         return this.playerOneOption == "Human";
       } else {
@@ -466,6 +470,30 @@ export default {
   right: 0;
   padding-right: 1rem;
   padding-top: 1rem;
+}
+
+.fa-lightbulb {
+  left: 1rem;
+  bottom: 1rem;
+  position: absolute;
+  opacity: 75%;
+  color: var(--grey);
+}
+
+.fa-lightbulb:hover {
+  cursor: pointer;
+}
+
+.fa-github {
+  right: 1rem;
+  bottom: 1rem;
+  position: absolute;
+  opacity: 75%;
+  color: var(--grey);
+}
+
+.fa-github:hover {
+  cursor: pointer;
 }
 
 .fa-x:hover {
@@ -566,10 +594,6 @@ label {
   word-break: break-word;
   border: 0;
   max-height: 3rem;
-}
-
-.hint-button {
-  margin-top: 1rem;
 }
 
 .button:hover {

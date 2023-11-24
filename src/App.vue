@@ -10,10 +10,12 @@ import { library } from '@fortawesome/fontawesome-svg-core'
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome'
 
 import { faX } from '@fortawesome/free-solid-svg-icons'
-import {faUserSecret} from '@fortawesome/free-solid-svg-icons'
+import { faLightbulb } from '@fortawesome/free-solid-svg-icons';
+import { faGithub } from '@fortawesome/free-brands-svg-icons';
 
 library.add(faX);
-library.add(faUserSecret);
+library.add(faLightbulb);
+library.add(faGithub);
 
 export default {
   name: 'App',
