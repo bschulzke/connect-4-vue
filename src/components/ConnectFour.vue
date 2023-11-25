@@ -1,7 +1,7 @@
 <template>
   <div :style="{ 
     '--p1': playerOneColor, 
-    '--yellow': playerTwoColor, 
+    '--p2': playerTwoColor, 
     '--border': border,
     '--green': green, 
     '--green-hover': greenHover, 
@@ -37,7 +37,7 @@
     <div class="options">
     <div class="player-selection">
       <div class="dropdown-wrapper">
-        <div @click="playerOneColorPicker = true" class="red-circle small-tile"/>
+        <div @click="playerOneColorPicker = true" class="p1-circle small-tile"/>
         <select :disabled="optionsDisabled" v-model="playerOneOption">
           <option>Human</option>
           <option>AI</option>
@@ -51,7 +51,7 @@
     <button :disabled="buttonDisabled" class="button" role="button" @click="startOrRestart">{{buttonText}}</button>
     <div class="player-selection">
       <div class="dropdown-wrapper">
-        <div @click="playerTwoColorPicker = true" class="yellow-circle small-tile"/>
+        <div @click="playerTwoColorPicker = true" class="p2-circle small-tile"/>
         <select :disabled="optionsDisabled" v-model="playerTwoOption">
           <option>Human</option>
           <option>AI</option>
@@ -78,7 +78,7 @@
     ]">
       <div v-for="row, rowIndex in col" v-bind:key="rowIndex" 
       :class="[
-        {red: game[colIndex][rowIndex] == 1, yellow: game[colIndex][rowIndex] == 2, 
+        {p1: game[colIndex][rowIndex] == 1, p2: game[colIndex][rowIndex] == 2, faded: gameOver,
           'green-border': mostRecent[0] == colIndex && mostRecent[1] == rowIndex},
          'circle'
          ]"/>
@@ -554,14 +554,17 @@ label {
   width: 12vh;
   border-radius: 100%;
 }
-.red {
+.p1 {
   background-color: var(--p1);
 }
-.yellow {
-  background-color: var(--yellow);
+.p2 {
+  background-color: var(--p2);
+}
+.faded {
+  opacity: 50%;
 }
 .y:hover {
-  outline-color: var(--yellow);
+  outline-color: var(--p2);
   cursor: pointer;
 }
 .r:hover {
@@ -632,12 +635,12 @@ label {
   cursor: pointer;
 }
 
-.red-circle {
+.p1-circle {
   background-color: var(--p1);
 }
 
-.yellow-circle {
-  background-color: var(--yellow);
+.p2-circle {
+  background-color: var(--p2);
 }
 
 /* Copyright (c) 2013 John W. Long and Julia Elman
