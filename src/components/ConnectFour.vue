@@ -64,7 +64,7 @@
     </div>
   </div>
   <div class="loader-wrapper">
-    <div v-if="isLoading" class="throbber-loader"></div>
+    <div v-if="isLoading || (!humanTurn && gameStarted && !gameOver)" class="throbber-loader"></div>
   </div>
   <div class="victory-text">{{ victoryText }}</div>
   <div class="connect-four">
@@ -155,8 +155,7 @@ export default {
     },
     getHint() {
       let validMoves = this.getValidMoves();
-      console.log("Hint depth: " + this.hintDepth);
-      let message = [validMoves, toRaw(this.game), this.player, this.otherPlayer, this.hintDepth];
+      let message = [validMoves, toRaw(this.game), this.player, this.otherPlayer, 5];
       console.log("Starting up the worker to get a hint...")
       worker.postMessage(message);
       this.isLoading = true;
@@ -289,14 +288,10 @@ export default {
       }
     },
     otherPlayer() {
-      if (!this.gameOver) {
-        if (this.redPlayer) {
-        return 2;
-        } else {
-          return 1;
-        }
+      if (this.redPlayer) {
+      return 2;
       } else {
-        return 0;
+        return 1;
       }
     },
     playerDepth() {
@@ -312,16 +307,6 @@ export default {
       } else {
         return Number(this.playerOneLevel);
       }
-    },
-    hintDepth() {
-      let depth = Number(this.otherPlayerDepth);
-      if (depth < 1) {
-        depth = 1;
-      }
-      if (depth < 5) {
-        depth = depth + 2;
-      }
-      return depth;
     },
     redWon() {
       return this.isWinningState(1);
