@@ -20,5 +20,9 @@ npm run build
 npm run build
 ```
 ```
+git add --all
+git commit
+```
+```
 git subtree push --prefix dist origin dist
 ```

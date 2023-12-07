@@ -13,50 +13,22 @@
   <font-awesome-icon :disabled="!humanTurn" role="button" @click="getHint" icon="fa-solid fa-lightbulb" />
   <a href="https://github.com/bschulzke/connect-4-vue" target="_blank"><font-awesome-icon icon="fa-brands fa-github" /></a>
     <div @click="playerOneColorPicker = false; playerTwoColorPicker = false;" v-if="playerOneColorPicker || playerTwoColorPicker" class="overlay">
-      <div @click.prevent.stop class="color-picker" v-if="playerOneColorPicker">
-        <font-awesome-icon @click="playerOneColorPicker = false" icon="fa-solid fa-x"/>
-        <div 
-        v-for="color in p1ColorOptions" 
-        v-bind:key="color" 
-        :class="['big-tile', {'green-border': color == playerOneColor}]" 
-        :style="{ 'background-color': color }"
-        @click="playerOneColor = color"
-        />
-      </div>
-      <div @click.prevent.stop class="color-picker" v-if="playerTwoColorPicker">
-        <font-awesome-icon @click="playerTwoColorPicker = false" icon="fa-solid fa-x" />
-        <div 
-        v-for="color in p2ColorOptions" 
-        v-bind:key="color" 
-        :class="['big-tile', {'green-border': color == playerTwoColor}]" 
-        :style="{ 'background-color': color }"
-        @click="playerTwoColor = color"
-        />
-      </div>
+      <ColorPicker v-if="playerOneColorPicker" :colorOptions="p1ColorOptions" :playerColor="playerOneColor" 
+        @color="(color) => playerOneColor = color" @close="playerOneColorPicker = false"/>
+      <ColorPicker v-if="playerTwoColorPicker" :colorOptions="p2ColorOptions" :playerColor="playerTwoColor" 
+        @color="(color) => playerTwoColor = color" @close="playerTwoColorPicker = false"/>
     </div>
     <div class="options">
     <div class="player-selection">
-      <div class="dropdown-wrapper">
-        <div @click="playerOneColorPicker = true" class="p1-circle small-tile"/>
-        <select :disabled="optionsDisabled" v-model="playerOneOption">
-          <option>Human</option>
-          <option>AI</option>
-        </select>
-      </div>
-    <div v-if="playerOneOption == 'AI'" class="slider-wrapper">
+    <PlayerSelector :optionsDisabled="optionsDisabled" @input="(value) => playerOneOption = value"/>
+    <div v-if="playerOneOption === 'AI'" class="slider-wrapper">
       <input :disabled="optionsDisabled" v-model="playerOneLevel" type="range" id="al" name="a1" min="0" max="5">    
       <label disabled="true" for="a1">Difficulty</label>
     </div>
     </div>
     <button :disabled="buttonDisabled" class="button" role="button" @click="startOrRestart">{{buttonText}}</button>
     <div class="player-selection">
-      <div class="dropdown-wrapper">
-        <div @click="playerTwoColorPicker = true" class="p2-circle small-tile"/>
-        <select :disabled="optionsDisabled" v-model="playerTwoOption">
-          <option>Human</option>
-          <option>AI</option>
-        </select>
-      </div>
+      <PlayerSelector :optionsDisabled="optionsDisabled" @input="(value) => playerTwoOption = value"/>
       <div v-if="playerTwoOption == 'AI'" class="slider-wrapper">
         <input :disabled="optionsDisabled" v-model="playerTwoLevel" type="range" id="al" name="a1" min="0" max="5">    
         <label disabled="true" for="a1">Difficulty</label>
@@ -90,13 +62,17 @@
 <script>
 
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome'
+import  ColorPicker from './ColorPicker.vue'
+import PlayerSelector from './PlayerSelector.vue'
 
 let worker = new Worker("agent.js");
 import { toRaw } from "vue";
 export default {
-  name: 'Connect Four',
+  name: 'ConnectFour',
   components: {
-    FontAwesomeIcon
+    FontAwesomeIcon,
+    ColorPicker,
+    PlayerSelector
   },
   data() {
     return {
@@ -155,12 +131,12 @@ export default {
     },
     getHint() {
       let validMoves = this.getValidMoves();
+      console.log("this.player: " + this.player);
+      console.log("this.otherPlayer: " + this.otherPlayer);
       let message = [validMoves, toRaw(this.game), this.player, this.otherPlayer, 5];
-      console.log("Starting up the worker to get a hint...")
       worker.postMessage(message);
       this.isLoading = true;
       worker.onmessage = (e) => {
-        console.log("Hint is column: " + e.data);
         this.hint = e.data;
         this.isLoading = false;
       }
@@ -245,11 +221,9 @@ export default {
         }
         return false;
     }
-
     function checkVertical(b) {
         return checkHorizontal(b[0].map((_, i) => b.map(row => row[i])));
     }
-
     function checkDiagonal(b) {
       for (let op of [null, (board) => [...board].map(row => row.reverse())]) {
           let opBoard = op ? op([...b]) : [...b];
@@ -271,7 +245,6 @@ export default {
 
       return false;
     }
-
     return checkHorizontal(this.board) || checkVertical(this.board) || checkDiagonal(this.board);
     },
   },                    
@@ -413,356 +386,3 @@ export default {
   }
 }
 </script>
-
-<!-- Add "scoped" attribute to limit CSS to this component only -->
-<style scoped>
-
-/*
-  greyscale filters:
-  -moz-filter: grayscale(90%);
-  -webkit-filter: grayscale(90%);
-  filter: grayscale(90%); */
-
-.overlay {
-  position: absolute;
-  left: 0;
-  top: 0;
-  right: 0;
-  bottom: 0;
-  background-color: var(--overlay);
-  display: flex;
-  justify-content: center;
-  align-items: center;
-}
-
-.color-picker {
-  height: 12rem;
-  width: 24rem;
-  background-color: var(--white);
-  border-radius: 1rem;
-  position: relative;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  gap: 1rem;
-  color: rgb(255, 45, 45);
-}
-
-.fa-x {
-  color: var(--grey);
-  position: absolute;
-  top: 0;
-  right: 0;
-  padding-right: 1rem;
-  padding-top: 1rem;
-}
-
-.fa-lightbulb {
-  left: 1rem;
-  bottom: 1rem;
-  position: absolute;
-  opacity: 75%;
-  color: var(--grey);
-}
-
-.fa-lightbulb:hover {
-  cursor: pointer;
-}
-
-.fa-github {
-  right: 1rem;
-  bottom: 1rem;
-  position: absolute;
-  opacity: 75%;
-  color: var(--grey);
-}
-
-.fa-github:hover {
-  cursor: pointer;
-}
-
-.fa-x:hover {
-  cursor: pointer;
-}
-
-label {
-  font-size: 0.8rem;
-  color: var(--grey);
-}
-.connect-four {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  gap: 3px;
-  width: 100%;
-}
-.options {
-  display: flex;
-  width: 100%;
-  justify-content: center;
-  gap: 13.5vw;
-}
-
-.victory-text {
-  height: 2rem; 
-  padding-top: 0.5rem;
-  color: var(--text-color);
-}
-
-.player-selection {
-  display: flex;
-  flex-direction: column;
-  width: 6rem;
-}
-
-.dropdown-wrapper {
-  display: flex;
-  gap: 0.5rem;
-}
-
-.slider-wrapper {
-  display: flex;
-  flex-direction: column;
-  height: 1rem;
-}
-
-.column {
-  display: flex;
-  flex-direction: column;
-  gap: 1px;
-  outline: 2px solid transparent;
-  border-radius: 5px;
-}
-.circle {
-  border: 2px solid var(--border);
-  height: 12vh;
-  width: 12vh;
-  border-radius: 100%;
-}
-.p1 {
-  background-color: var(--p1);
-}
-.p2 {
-  background-color: var(--p2);
-}
-.faded {
-  opacity: 50%;
-}
-.y:hover {
-  outline-color: var(--p2);
-  cursor: pointer;
-}
-.r:hover {
-  outline-color: var(--p1);
-  cursor: pointer;
-}
-
-.hint {
-  outline-color: var(--green);
-}
-
-/* CSS */
-.button {
-  background: var(--green);
-  border-radius: 999px;
-  box-sizing: border-box;
-  color: var(--white);
-  cursor: pointer;
-  font-family: Inter,Helvetica,"Apple Color Emoji","Segoe UI Emoji",NotoColorEmoji,"Noto Color Emoji","Segoe UI Symbol","Android Emoji",EmojiSymbols,-apple-system,system-ui,"Segoe UI",Roboto,"Helvetica Neue","Noto Sans",sans-serif;
-  font-size: 1rem;
-  font-weight: 700;
-  line-height: 2rem;
-  opacity: 1;
-  outline: 0 solid transparent;
-  padding: 0.5rem;
-  user-select: none;
-  -webkit-user-select: none;
-  touch-action: manipulation;
-  min-width: 6rem;
-  word-break: break-word;
-  border: 0;
-  max-height: 3rem;
-}
-
-.button:hover {
-  background: var(--green-hover);
-}
-
-.button:disabled {
-  background: var(--grey);
-}
-
-.loader-wrapper {
-  height: 1rem;
-  margin-top: 1rem;
-}
-
-.small-tile {
-  width: 1rem;
-  height: 1rem;
-  border-radius: 100%;
-  border: 1px solid var(--border);
-}
-
-.big-tile {
-  width: 3rem;
-  height: 3rem;
-  border-radius: 100%;
-  border: 2px solid var(--border);
-}
-
-.big-tile:hover {
-  cursor: pointer;
-  border-color: var(--green);
-}
-
-.small-tile:hover {
-  cursor: pointer;
-}
-
-.p1-circle {
-  background-color: var(--p1);
-}
-
-.p2-circle {
-  background-color: var(--p2);
-}
-
-/* Copyright (c) 2013 John W. Long and Julia Elman
-
-Permission is hereby granted, free of charge, to any person obtaining
-a copy of this software and associated documentation files (the
-"Software"), to deal in the Software without restriction, including
-without limitation the rights to use, copy, modify, merge, publish,
-distribute, sublicense, and/or sell copies of the Software, and to
-permit persons to whom the Software is furnished to do so, subject to
-the following conditions:
-
-The above copyright notice and this permission notice shall be
-included in all copies or substantial portions of the Software.
-
-THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
-EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
-MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
-NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE
-LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION
-OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION
-WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE. */
-@-moz-keyframes throbber-loader {
-  0% {
-    background: #dde2e7;
-  }
-  10% {
-    background: #6b9dc8;
-  }
-  40% {
-    background: #dde2e7;
-  }
-}
-@-webkit-keyframes throbber-loader {
-  0% {
-    background: #dde2e7;
-  }
-  10% {
-    background: #6b9dc8;
-  }
-  40% {
-    background: #dde2e7;
-  }
-}
-@keyframes throbber-loader {
-  0% {
-    background: #dde2e7;
-  }
-  10% {
-    background: #6b9dc8;
-  }
-  40% {
-    background: #dde2e7;
-  }
-}
-/* :not(:required) hides these rules from IE9 and below */
-.throbber-loader:not(:required) {
-  -moz-animation: throbber-loader 2000ms 300ms infinite ease-out;
-  -webkit-animation: throbber-loader 2000ms 300ms infinite ease-out;
-  animation: throbber-loader 2000ms 300ms infinite ease-out;
-  background: #dde2e7;
-  display: inline-block;
-  position: relative;
-  text-indent: -9999px;
-  width: 0.9em;
-  height: 1.5em;
-  margin: 0 1.6em;
-}
-.throbber-loader:not(:required):before, .throbber-loader:not(:required):after {
-  background: #dde2e7;
-  content: '\x200B';
-  display: inline-block;
-  width: 0.9em;
-  height: 1.5em;
-  position: absolute;
-  top: 0;
-}
-.throbber-loader:not(:required):before {
-  -moz-animation: throbber-loader 2000ms 150ms infinite ease-out;
-  -webkit-animation: throbber-loader 2000ms 150ms infinite ease-out;
-  animation: throbber-loader 2000ms 150ms infinite ease-out;
-  left: -1.6em;
-}
-.throbber-loader:not(:required):after {
-  -moz-animation: throbber-loader 2000ms 450ms infinite ease-out;
-  -webkit-animation: throbber-loader 2000ms 450ms infinite ease-out;
-  animation: throbber-loader 2000ms 450ms infinite ease-out;
-  right: -1.6em;
-}
-
-.green-border {
-  border-color: var(--green);
-}
-
-@media only screen 
-and (max-width : 1200px) {
-  .circle {
-    height: 12vw;
-    width: 12vw;
-  }
-  .y:hover {
-    outline-color: transparent;
-  }
-  .r:hover {
-    outline-color: transparent;
-  }
-}
-
-@media only screen 
-and (max-width : 400px) {
-  .options {
-    gap: 10vw;
-  }
-  .color-picker {
-    width: 22rem;
-  }
-}
-@media only screen 
-and (min-width: 901px)
-and (max-width : 1100px) {
-  .circle {
-    height: 10vw;
-    width: 10vw;
-  }
-  .y:hover {
-    outline-color: transparent;
-  }
-  .r:hover {
-    outline-color: transparent;
-  }
-}
-
-@media only screen
-and (max-width: 375px) {
-  .options {
-  gap: 8vw;
-}
-}
-
-</style>
