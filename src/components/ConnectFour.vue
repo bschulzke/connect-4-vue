@@ -20,19 +20,13 @@
     </div>
     <div class="options">
     <div class="player-selection">
-    <PlayerSelector :optionsDisabled="optionsDisabled" @input="(value) => playerOneOption = value"/>
-    <div v-if="playerOneOption === 'AI'" class="slider-wrapper">
-      <input :disabled="optionsDisabled" v-model="playerOneLevel" type="range" id="al" name="a1" min="0" max="5">    
-      <label disabled="true" for="a1">Difficulty</label>
-    </div>
+      <PlayerSelector :optionsDisabled="optionsDisabled" v-model="playerOneOption"/>
+      <DifficultySlider v-if="playerOneOption === 'AI'" :optionsDisabled="optionsDisabled" v-model="playerOneLevel"/>
     </div>
     <button :disabled="buttonDisabled" class="button" role="button" @click="startOrRestart">{{buttonText}}</button>
     <div class="player-selection">
-      <PlayerSelector :optionsDisabled="optionsDisabled" @input="(value) => playerTwoOption = value"/>
-      <div v-if="playerTwoOption == 'AI'" class="slider-wrapper">
-        <input :disabled="optionsDisabled" v-model="playerTwoLevel" type="range" id="al" name="a1" min="0" max="5">    
-        <label disabled="true" for="a1">Difficulty</label>
-      </div>
+      <PlayerSelector :optionsDisabled="optionsDisabled" v-model="playerTwoOption"/>
+      <DifficultySlider v-if="playerTwoOption === 'AI'" :optionsDisabled="optionsDisabled" v-model="playerTwoLevel"/>
     </div>
   </div>
   <div class="loader-wrapper">
@@ -64,6 +58,7 @@
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome'
 import  ColorPicker from './ColorPicker.vue'
 import PlayerSelector from './PlayerSelector.vue'
+import DifficultySlider from './DifficultySlider.vue'
 
 let worker = new Worker("agent.js");
 import { toRaw } from "vue";
@@ -72,7 +67,8 @@ export default {
   components: {
     FontAwesomeIcon,
     ColorPicker,
-    PlayerSelector
+    PlayerSelector,
+    DifficultySlider
   },
   data() {
     return {

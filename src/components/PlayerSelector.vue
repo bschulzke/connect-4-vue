@@ -1,7 +1,7 @@
 <template>
     <div class="dropdown-wrapper">
-        <div @click="$emit('color-picker')" class="p1-circle small-tile"/>
-        <select :disabled="optionsDisabled" @change="handleInput($event)">
+        <div class="p1-circle small-tile"/>
+        <select :disabled="optionsDisabled" :value="modelValue" @change="$emit('update:modelValue', $event.target.value)">
             <option>Human</option>
             <option>AI</option>
         </select>
@@ -12,19 +12,10 @@
 
 export default {
   name: 'PlayerSelector',
-  prop: ['value'],
+  emits: ['update:modelValue'],
   props: {
     optionsDisabled: Boolean,
-  },
-  data () {
-    return {
-      content: this.value
-    }
-  },
-  methods: {
-    handleInput (event) {
-      this.$emit('input', event.target.value);
-    }
+    modelValue: String
   }
 }
 
